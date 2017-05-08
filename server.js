@@ -5,6 +5,7 @@ let express = require('express'),
   bodyParser = require('body-parser'),
   cookieParser = require('cookie-parser'),
   debug = require('debug')('mean'),
+  passport = require('passport'),
   logger = require('morgan');
 
 // Get Express router module
@@ -12,8 +13,10 @@ const router = express.Router();
 // Create an Express application
 let app = express();
 
-// Get application routes
-require('./server/routes/users')(router);
+// Passport configuration
+require('./server/config/passport')(passport) 
+// Aplication routes configuration
+require('./server/routes')(router, passport);
 
 // Get server settings
 const settings = require('./server/utilities/settings')();
@@ -33,12 +36,6 @@ if (settings.runMode == 'production') {
   app.use(logger('dev'));
 }
 
-// Connect to database
-mongoose.connect(settings.db, function (err) {
-  if (err) throw err;
-  debug('Successfully connected to MongoDB');
-});
-
 // Tell express that messages bodies will be JSON formatted
 app.use(bodyParser.json());
 // Only parses urlencoded bodies (gzip and deflate enabled)
@@ -52,28 +49,39 @@ app.use(cookieParser());
 // Set default static files path
 app.use(express.static(settings.publicPath));
 
+// Initialize passport used by express for authentication
+app.use(passport.initialize())
+
 // Set web service routes
 app.use('/api', router);
 
 // Default home page
 app.get('/', function (req, res) {
   res.sendFile('index.html', {
-    root: publicPath
+    root: settings.publicPath
   });
 });
 
-// Unknown route
+// Unknown route handler
 app.use((req, res) => {
   res.status(404).send('The requested page doesn\'t exist!');
 });
 
-// Errors processing
+// Errors handler
 app.use(function (err, req, res, next) {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
 
-// Create HTTP server
-app.listen(port, function () {
-  debug('Listening on port ' + port);
+// Connect to database
+mongoose.connect(settings.db, function (err) {
+  
+  if (err) throw err;
+  
+  debug('Successfully connected to MongoDB');
+  
+  // Finally, create the HTTP server
+  app.listen(port, function () {
+    debug('Listening on port ' + port);
+  });
 });

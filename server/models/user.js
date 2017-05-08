@@ -1,11 +1,12 @@
 'use strict';
 
-let settings = require('../utilities/settings');
+let settings = require('../utilities/settings')();
 let strings = require('../utilities/strings');
 let mongoose = require('mongoose')
 let jwt = require('jsonwebtoken');
 let bcrypt = require('bcrypt');
 
+// For password encryption
 const SALT_WORK_FACTOR = 10;
 
 let UserSchema = new mongoose.Schema({
@@ -30,11 +31,17 @@ let UserSchema = new mongoose.Schema({
     type: String,
     require: true,
     select: false
+  },
+  facebook: {
+    id: String, 
+    token: String, 
+    photo: String
   }
 }, {
   timestamps: true
 });
 
+// Sanitize the user fields before storing in db
 UserSchema.pre('save', function (next) {
 
   if (this.isModified('firstName')) {
@@ -69,6 +76,7 @@ UserSchema.pre('save', function (next) {
   }
 });
 
+// Sanitize the modified user fields before storing in db
 UserSchema.pre('update', function (next) {
 
   var values = this._update.$set;
@@ -104,6 +112,7 @@ UserSchema.pre('update', function (next) {
   }
 });
 
+// Compare the given password with the db encrypted one 
 UserSchema.methods.validPassword = function (candidatePassword, next) {
   bcrypt.compare(candidatePassword, this.password, function (err, match) {
     if (err) {
@@ -114,19 +123,23 @@ UserSchema.methods.validPassword = function (candidatePassword, next) {
   });
 };
 
-UserSchema.methods.generateJwt = function () {
-
-  var expiry = new Date();
-  expiry.setDate(expiry.getDate() + 7);
+// Build an encrypted token from the current used
+UserSchema.methods.generateJWT = function () {
 
   return jwt.sign({
     _id: this._id,
     email: this.email,
-    name: this.fullName(),
-    exp: parseInt(expiry.getTime() / 1000),
-  }, settings.jwtSecret);
+    firstName: this.firstName,
+    lastName: this.lastName,
+    isAdmin: this.isAdmin
+  }, 
+  settings.jwtSecret,
+  {
+    expiresIn: '7d'
+  });
 };
 
+// Return the full user name
 UserSchema.methods.fullName = function () {
   return this.firstName + ' ' + this.lastName;
 };

@@ -14,7 +14,7 @@ module.exports = function () {
       break;
   }
 
-  settings.publicPath = path.join(__dirname, 'public');
+  settings.publicPath = path.join(__dirname, '../../public');
   settings.runMode = runMode;
 
   return settings;
