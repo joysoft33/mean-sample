@@ -5,8 +5,7 @@ let express = require('express'),
   bodyParser = require('body-parser'),
   cookieParser = require('cookie-parser'),
   debug = require('debug')('mean'),
-  logger = require('morgan'),
-  path = require('path');
+  logger = require('morgan');
 
 // Get Express router module
 const router = express.Router();
@@ -16,17 +15,14 @@ let app = express();
 // Get application routes
 require('./server/routes/users')(router);
 
-// Get server launch mode
-const launchMode = app.get('env') || 'development';
 // Get server settings
-const settings = require('./config/env')[launchMode]
-// Build server public directory path
-const publicPath = path.join(__dirname, 'public');
+const settings = require('./server/utilities/settings')();
+
 // Get port from environment and store in Express.
 const port = parseInt(process.env.PORT, 10) || 8080;
 
 // Set logger device
-if (launchMode == 'production') {
+if (settings.runMode == 'production') {
   app.use(logger('prod', {
     skip: function (req, res) {
       return res.statusCode < 400
@@ -38,7 +34,10 @@ if (launchMode == 'production') {
 }
 
 // Connect to database
-mongoose.connect(settings.db);
+mongoose.connect(settings.db, function (err) {
+  if (err) throw err;
+  debug('Successfully connected to MongoDB');
+});
 
 // Tell express that messages bodies will be JSON formatted
 app.use(bodyParser.json());
@@ -51,7 +50,7 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 // Set default static files path
-app.use(express.static(publicPath));
+app.use(express.static(settings.publicPath));
 
 // Set web service routes
 app.use('/api', router);

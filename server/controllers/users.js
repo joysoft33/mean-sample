@@ -30,7 +30,10 @@ class UsersController {
       if (err) {
         next(err);
       } else {
-        res.json(user);
+        // Don't return the password field!!
+        var o = user.toObject();
+        delete o.password;
+        res.send(o);
       }
     });
   }
@@ -39,7 +42,7 @@ class UsersController {
   update(req, res, next) {
     User.update({
       _id: req.params.id
-    }, req.body, (err, user) => {
+    }, req.body, (err, status) => {
       if (err) {
         next(err);
       } else {
