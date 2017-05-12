@@ -1,0 +1,8 @@
+{
+  "predef": ["angular", "module"],
+  "globalstrict": true,
+  "esversion": 6,
+  "globals": {
+    "require": true
+  }
+}

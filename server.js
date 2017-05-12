@@ -1,31 +1,32 @@
 'use strict';
 
-let express = require('express'),
-  mongoose = require('mongoose'),
-  bodyParser = require('body-parser'),
-  cookieParser = require('cookie-parser'),
-  debug = require('debug')('mean'),
-  passport = require('passport'),
-  logger = require('morgan');
-
-// Get Express router module
-const router = express.Router();
-// Create an Express application
-let app = express();
+import express from 'express';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import debug from 'debug';
+import logger from 'morgan';
 
 // Passport configuration
-require('./server/config/passport')(passport) 
-// Aplication routes configuration
-require('./server/routes')(router, passport);
+import auth from './server/config/passport';
+let passport = auth();
+
+// Application routes configuration function
+import router from './server/routes';
 
 // Get server settings
-const settings = require('./server/utilities/settings')();
+import settings from './server/utilities/settings';
+// Get application config
+let env = settings();
+
+// Create an Express application
+let app = express();
 
 // Get port from environment and store in Express.
 const port = parseInt(process.env.PORT, 10) || 8080;
 
 // Set logger device
-if (settings.runMode == 'production') {
+if (env.runMode == 'production') {
   app.use(logger('prod', {
     skip: function (req, res) {
       return res.statusCode < 400
@@ -47,18 +48,18 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 // Set default static files path
-app.use(express.static(settings.publicPath));
+app.use(express.static(env.publicPath));
 
 // Initialize passport used by express for authentication
 app.use(passport.initialize())
 
 // Set web service routes
-app.use('/api', router);
+app.use('/api', router(app, passport));
 
 // Default home page
 app.get('/', function (req, res) {
   res.sendFile('index.html', {
-    root: settings.publicPath
+    root: env.publicPath
   });
 });
 
@@ -74,7 +75,7 @@ app.use(function (err, req, res, next) {
 });
 
 // Connect to database
-mongoose.connect(settings.db, function (err) {
+mongoose.connect(env.db, function (err) {
   
   if (err) throw err;
   

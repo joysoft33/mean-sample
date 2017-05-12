@@ -1,10 +1,8 @@
 'use strict';
 
-let User = require('../models/user');
+import User from '../models/user';
 
 class AuthController {
-
-  constructor() {}
 
   // Authenticate user using our "LocalStrategy" in passport.js
   local(req, res, next, passport) {
@@ -42,4 +40,4 @@ class AuthController {
   }
 }
 
-module.exports = AuthController;
+export default AuthController;

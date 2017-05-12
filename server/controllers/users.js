@@ -1,6 +1,6 @@
 'use strict';
 
-let User = require('../models/user');
+import User from '../models/user';
 
 class UsersController {
 
@@ -76,4 +76,4 @@ class UsersController {
 
 }
 
-module.exports = UsersController
+export default UsersController

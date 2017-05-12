@@ -1,7 +1,10 @@
-module.exports = {
-  "development": {
+'use strict';
+
+let config = {
+
+  'development': {
     db: process.env.MONGODB_URI ||  'mongodb://localhost:27017/mean-sample-dev',
-    cookieToken: "mean-token-dev",
+    cookieToken: 'mean-token-dev',
     jwtSecret: 'cJbdB3t$',
     facebookAuth: {
       clientID: '000000',
@@ -9,9 +12,10 @@ module.exports = {
       callbackURL: 'cb'
     }
   },
-  "production": {
+  
+  'production': {
     db: process.env.MONGODB_URI ||  'mongodb://localhost:27017/mean-sample',
-    cookieToken: "mean-token",
+    cookieToken: 'mean-token',
     jwtSecret: 'cJbdB3t$',
     facebookAuth: {
       clientID: '000000',
@@ -19,4 +23,6 @@ module.exports = {
       callbackURL: 'cb'
     }
   }
-}
+};
+
+export default config;

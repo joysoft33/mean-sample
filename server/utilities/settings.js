@@ -1,21 +1,25 @@
 'use strict';
 
-let path = require('path');
+import path from 'path';
+import config from '../config/env';
 
-module.exports = function () {
+const RUN_MODE = process.env.NODE_ENV || 'development';
 
-  var runMode = process.env.NODE_ENV || 'development';
-  var settings = {};
+function settings() {
 
-  switch (runMode) {
+  let env = {};
+
+  switch (RUN_MODE) {
     case 'development':
     case 'production':
-      settings = require('../config/env')[runMode];
+      env = config[RUN_MODE];
       break;
   }
 
-  settings.publicPath = path.join(__dirname, '../../public');
-  settings.runMode = runMode;
+  env.publicPath = path.join(__dirname, 'public');
+  env.runMode = RUN_MODE;
 
-  return settings;
+  return env;
 }
+
+export default settings;

@@ -1,0 +1,1 @@
+angular.module('templates', []).run(['$templateCache', function($templateCache) {$templateCache.put('components/app/app.html','<div>\n  COUCOU\n</div>');}]);

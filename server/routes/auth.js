@@ -1,21 +1,21 @@
 'use strict';
 
-let AuthController = require('../controllers/auth');
+import AuthController from '../controllers/auth';
 
-module.exports = (app, passport) => {
+export default (router, passport) => {
 
   let auth = new AuthController(passport);
 
-  app.post('/auth', (req, res, next) => {
+  router.post('/auth', (req, res, next) => {
     return auth.local(req, res, next, passport);
   });
 
-  app.get('/auth/facebook', passport.authenticate('facebook', {
+  router.get('/auth/facebook', passport.authenticate('facebook', {
     scope: 'email'
   }))
 
   // Handle the callback after facebook has authenticated the user
-  app.get('/auth/facebook/callback', auth.facebook(passport), (req, res, next) => {
+  router.get('/auth/facebook/callback', auth.facebook(passport), (req, res, next) => {
     return auth.authenticate(req, res, next);
   });
 }

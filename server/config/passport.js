@@ -1,11 +1,14 @@
 'use strict';
 
-let settings = require('../utilities/settings')();
-let FacebookStrategy = require('passport-facebook').Strategy;
-let LocalStrategy = require('passport-local').Strategy;
-let User = require('../models/user');
+import Facebook from 'passport-facebook';
+import Local from 'passport-local';
+import User from '../models/user';
+import settings from '../utilities/settings';
+import passport from 'passport';
 
-module.exports = (passport) => {
+export default () => {
+
+  let env = settings();
 
   // Take a look at: http://stackoverflow.com/questions/27637609/understanding-passport-serialize-deserialize
   // and https://howtonode.org/understanding-process-next-tick
@@ -26,7 +29,7 @@ module.exports = (passport) => {
   })
 
   // Initialize LocalStrategy
-  passport.use(new LocalStrategy({
+  passport.use(new Local.Strategy({
     usernameField: 'email'
   }, (email, password, done) => {
     // Ensure that this will be executed asynchronously
@@ -58,9 +61,9 @@ module.exports = (passport) => {
   }));
 
   // Initialize FacebookStrategy
-  passport.use(new FacebookStrategy({
-    clientID: settings.facebookAuth.clientID,
-    clientSecret: settings.facebookAuth.clientSecret,
+  passport.use(new Facebook({
+    clientID: env.facebookAuth.clientID,
+    clientSecret: env.facebookAuth.clientSecret,
     callbackURL: '/auth/facebook/callback',
     profileFields: ['id', 'name', 'photos', 'emails']
   }, (token, refreshToken, profile, done) => {
@@ -97,4 +100,5 @@ module.exports = (passport) => {
 
   }));
 
+  return passport;
 }

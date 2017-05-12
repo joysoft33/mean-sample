@@ -1,10 +1,10 @@
 'use strict';
 
-let settings = require('../utilities/settings')();
-let strings = require('../utilities/strings');
-let mongoose = require('mongoose')
-let jwt = require('jsonwebtoken');
-let bcrypt = require('bcrypt');
+import settings from '../utilities/settings';
+import strings from '../utilities/strings';
+import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 // For password encryption
 const SALT_WORK_FACTOR = 10;
@@ -126,6 +126,8 @@ UserSchema.methods.validPassword = function (candidatePassword, next) {
 // Build an encrypted token from the current used
 UserSchema.methods.generateJWT = function () {
 
+  let env = settings();
+
   return jwt.sign({
     _id: this._id,
     email: this.email,
@@ -133,7 +135,7 @@ UserSchema.methods.generateJWT = function () {
     lastName: this.lastName,
     isAdmin: this.isAdmin
   }, 
-  settings.jwtSecret,
+  env.jwtSecret,
   {
     expiresIn: '7d'
   });
@@ -144,4 +146,4 @@ UserSchema.methods.fullName = function () {
   return this.firstName + ' ' + this.lastName;
 };
 
-module.exports = mongoose.model('User', UserSchema);
+export default mongoose.model('User', UserSchema);
