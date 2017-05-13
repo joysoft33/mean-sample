@@ -1,12 +1,12 @@
 'use strict';
 
-import template from './home.html';
+import template from './users.html';
 
 export default {
 
   template: template,
 
-  controller: function () {
+  controller: function (UsersService) {
     'ngInject';
 
     this.$onInit = () => {

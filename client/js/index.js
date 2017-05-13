@@ -13,7 +13,7 @@ import '../css/index.scss';
 import './components';
 import './services';
 
-import routes from './routes';
+import config from './config';
 
 let app = angular.module('meanApp', [
   'ui.router',
@@ -23,6 +23,7 @@ let app = angular.module('meanApp', [
   'appServices'
 ]);
 
-app.config(routes);
+app.config(config.routes);
+app.run(config.run);
 
 export default app;

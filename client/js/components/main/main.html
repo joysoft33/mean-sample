@@ -1,0 +1,16 @@
+<md-toolbar>
+  <div class="md-toolbar-tools">
+    <h3>MEAN sample app</h3>
+  </div>
+</md-toolbar>
+<md-content class="md-padding">
+  <md-nav-bar md-selected-nav-item="$ctrl.selectedTab" aria-label="menu">
+    <md-nav-item md-nav-sref="home" sref-opts="{reload:true, notify:true}" name="home">Home</md-nav-item>
+    <md-nav-item md-nav-sref="users" sref-opts="{reload:true, notify:true}" name="users">Users</md-nav-item>
+  </md-nav-bar>
+  <md-content layout-padding>
+    <div class="ext-content">
+      <ui-view></ui-view>
+    </div>
+  </md-content>
+</md-content>
