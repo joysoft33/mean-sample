@@ -1,4 +1,4 @@
 'use strict';
 
 import './module';
-import './app/app';
+import './home/home';

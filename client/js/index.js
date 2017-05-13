@@ -2,19 +2,27 @@
 
 import angular from 'angular';
 
+import 'angular-ui-router';
 import 'angular-aria';
 import 'angular-animate';
 import 'angular-material';
 
-import './templates';
+import '../../node_modules/angular-material/angular-material.scss';
+import '../css/index.scss';
 
 import './components';
 import './services';
 
-export default angular.module('meanApp', [
+import routes from './routes';
+
+let app = angular.module('meanApp', [
+  'ui.router',
   'ngAnimate',
   'ngMaterial',
-  'templates',
   'appComponents',
   'appServices'
 ]);
+
+app.config(routes);
+
+export default app;

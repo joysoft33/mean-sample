@@ -2,11 +2,13 @@
 
 import angular from 'angular';
 
+import template from './home.html';
+
 export default angular.module('appComponents')
 
-  .component('app', {
+  .component('home', {
 
-    templateUrl: './app.html',
+    template: template,
 
     controller: function() {
       'ngInject';

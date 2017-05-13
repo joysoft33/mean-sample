@@ -16,7 +16,7 @@ function settings() {
       break;
   }
 
-  env.publicPath = path.join(__dirname, 'public');
+  env.publicPath = 'dist/public';
   env.runMode = RUN_MODE;
 
   return env;

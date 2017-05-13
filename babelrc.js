@@ -7,7 +7,8 @@ function config(server) {
         node: 'current'
       } : {
         browsers: ['> 5%', 'last 2 versions']
-      }
+      },
+      modules: false
     }]
   ];
   if (!server) {

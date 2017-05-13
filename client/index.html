@@ -5,14 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <!--<link rel="stylesheet" href="vendors/bundle.min.css">-->
-  <link rel="stylesheet" href="css/index.css">
 </head>
 <body ng-app="meanApp">
   
-  <app></app>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h3>MEAN sample app</h3>
+    </div>
+  </md-toolbar>
 
-  <!--<script type="application/javascript" src="vendors/bundle.min.js"></script>-->
-  <script type="application/javascript" src="js/index.js"></script>
+  <ui-view></ui-view>
+
 </body>
 </html>
