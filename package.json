@@ -19,22 +19,20 @@
     "angular-aria": "^1.6.4",
     "angular-material": "^1.1.4",
     "angular-ui-router": "^1.0.3",
+    "angular-css": "^1.0.8",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.17.1",
     "cookie-parser": "^1.4.3",
     "express": "^4.15.2",
     "express-jwt": "^5.3.0",
-    "gulp-jshint": "^2.0.4",
     "jsonwebtoken": "^7.4.0",
-    "mongoose": "^4.9.7",
+    "mongoose": "^4.9.9",
     "morgan": "^1.8.1",
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.1",
-    "passport-local": "^1.0.0",
-    "path": "^0.12.7"
+    "passport-local": "^1.0.0"
   },
   "devDependencies": {
-    "angular-css": "^1.0.8",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
@@ -52,6 +50,7 @@
     "ng-annotate-loader": "^0.6.0",
     "node-sass": "^4.5.2",
     "nodemon": "^1.11.0",
+    "path": "^0.12.7",
     "sass-loader": "^6.0.5",
     "source-map-support": "^0.4.15",
     "style-loader": "^0.17.0",
@@ -59,5 +58,12 @@
     "webpack": "^2.5.1",
     "webpack-clean-obsolete-chunks": "^0.1.9",
     "webpack-node-externals": "^1.6.0"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ],
+    "sourceMaps": true,
+    "retainLines": true
   }
 }

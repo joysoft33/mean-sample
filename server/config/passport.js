@@ -2,9 +2,10 @@
 
 import Facebook from 'passport-facebook';
 import Local from 'passport-local';
+import passport from 'passport';
+
 import User from '../models/user';
 import settings from '../utilities/settings';
-import passport from 'passport';
 
 export default () => {
 

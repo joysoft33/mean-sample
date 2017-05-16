@@ -1,6 +1,5 @@
 'use strict';
 
-import path from 'path';
 import config from '../config/env';
 
 const RUN_MODE = process.env.NODE_ENV || 'development';
