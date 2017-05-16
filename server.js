@@ -5,37 +5,27 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import debug from 'debug';
-import logger from 'morgan';
-
-// Passport configuration
-import auth from './server/config/passport';
-let passport = auth();
-
-// Application routes configuration function
-import router from './server/routes';
 
 // Get server settings
 import settings from './server/utilities/settings';
-// Get application config
-let env = settings();
+// Passport configuration
+import auth from './server/config/passport';
+// Logger device configuration
+import logs from './server/config/logs';
+// Application routes configuration function
+import router from './server/routes';
 
 // Create an Express application
 let app = express();
 
-// Get port from environment and store in Express.
-const port = parseInt(process.env.PORT, 10) || 8080;
+// Configure and get passport authentication object
+let passport = auth();
 
-// Set logger device
-if (env.runMode == 'production') {
-  app.use(logger('prod', {
-    skip: function (req, res) {
-      return res.statusCode < 400
-    },
-    stream: __dirname + './mean.log'
-  }));
-} else {
-  app.use(logger('dev'));
-}
+// Get application config
+let env = settings();
+
+// Configure logger device
+logs.configure(app, env.runMode == 'production');
 
 // Tell express that messages bodies will be JSON formatted
 app.use(bodyParser.json());
@@ -80,6 +70,9 @@ mongoose.connect(env.db, function (err) {
   if (err) throw err;
   
   debug('Successfully connected to MongoDB');
+
+  // Get port from environment and store in Express.
+  const port = parseInt(process.env.PORT, 10) || 8080;
   
   // Finally, create the HTTP server
   app.listen(port, function () {
