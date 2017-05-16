@@ -1,28 +1,23 @@
 'use strict';
 
 import angular from 'angular';
-import 'angular-ui-router';
+import uiRouter from 'angular-ui-router';
+import material from 'angular-material';
+import css from 'angular-css';
 
-import 'angular-aria';
-import 'angular-animate';
-import 'angular-material';
-import 'angular-css';
-
-import '../../node_modules/angular-material/angular-material.scss';
+import 'angular-material/angular-material.css';
 import '../css/index.scss';
 
-import './components';
-import './services';
-
+import components from './components';
+import services from './services';
 import config from './config';
 
 let app = angular.module('meanApp', [
-  'ui.router',
-  'ngAnimate',
-  'ngMaterial',
-  'angularCSS',
-  'appComponents',
-  'appServices'
+  uiRouter,
+  material,
+  css,
+  components,
+  services
 ]);
 
 app.config(config.routes);

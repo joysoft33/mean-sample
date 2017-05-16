@@ -8,4 +8,5 @@ import usersService from './users';
 export default angular.module('appServices', [])
 
   .service('AuthService', authService)
-  .service('UsersService', usersService);
+  .service('UsersService', usersService)
+  .name;

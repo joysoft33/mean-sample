@@ -10,4 +10,5 @@ export default angular.module('appComponents', [])
 
   .component('main', mainComponent)
   .component('home', homeComponent)
-  .component('users', usersComponent);
+  .component('users', usersComponent)
+  .name;

@@ -1,9 +1,10 @@
+const path = require('path');
+const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
 const MinifierPlugin = require('babili-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-var CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
-const webpack = require('webpack');
-const path = require('path');
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
 
 const NODE_MODULES = path.join(__dirname, './node_modules');
 const PRODUCTION = process.env.NODE_ENV === 'production';
@@ -66,6 +67,7 @@ const clientConfig = {
     rules: [{
       test: /\.js$/,
       include: path.resolve('client'),
+      exclude: /node_modules/,
       use: [{
         loader: 'ng-annotate-loader'
       }, {
@@ -81,25 +83,43 @@ const clientConfig = {
         'img-loader'
       ]
     }, {
+      test: /\.css$/,
+      use: ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: [{
+          loader: 'css-loader',
+          options: {
+            minimize: true
+          }
+        }]
+      })
+    }, {
       test: /\.scss$/,
-      use: [{
-        loader: 'style-loader'
-      }, {
-        loader: 'css-loader'
-      }, {
-        loader: 'sass-loader'
-      }]
+      use: ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: [{
+            loader: 'css-loader',
+            options: {
+              minimize: true
+            }
+          },
+          {
+            loader: 'sass-loader'
+          }
+        ]
+      })
     }, {
       test: /\.html$/,
       use: [{
         loader: 'html-loader',
         options: {
-          minimize: true
+          minimize: PRODUCTION
         }
       }]
     }]
   },
   plugins: [
+    new ExtractTextPlugin('[name].css'),
     PRODUCTION && new MinifierPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
@@ -109,9 +129,9 @@ const clientConfig = {
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
-      minChunks: function (module) {
-        return module.context && module.context.indexOf('node_modules') !== -1;
-      }
+      minChunks: ({
+        resource
+      }) => /node_modules/.test(resource)
     }),
     new CleanObsoleteChunks()
   ].filter(e => e),
