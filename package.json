@@ -65,7 +65,7 @@
     "webpack-clean-obsolete-chunks": "^0.1.9",
     "webpack-node-externals": "^1.6.0"
   },
-  // "devDependencies": {
+  "devDependencies": {
   //   "babel-cli": "^6.24.1",
   //   "babel-core": "^6.24.1",
   //   "babel-loader": "^7.0.0",
@@ -91,7 +91,7 @@
   //   "webpack": "^2.5.1",
   //   "webpack-clean-obsolete-chunks": "^0.1.9",
   //   "webpack-node-externals": "^1.6.0"
-  // },
+  },
   "babel": {
     "presets": [
       "es2015"
