@@ -4,7 +4,7 @@ import settings from '../utilities/settings';
 import strings from '../utilities/strings';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 // For password encryption
 const SALT_WORK_FACTOR = 10;

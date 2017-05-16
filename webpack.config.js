@@ -2,7 +2,6 @@ const nodeExternals = require('webpack-node-externals');
 const MinifierPlugin = require('babili-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 var CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpack = require('webpack');
 const path = require('path');
 
@@ -63,23 +62,33 @@ const clientConfig = {
     path: path.resolve('dist/public'),
     filename: '[name].[chunkhash].js',
   },
-  //externals: [nodeExternals()],
   module: {
     rules: [{
       test: /\.js$/,
       include: path.resolve('client'),
       use: [{
+        loader: 'ng-annotate-loader'
+      }, {
         loader: 'babel-loader',
         options: {
           presets: require('./babelrc.js')(false)
         }
       }]
     }, {
+      test: /\.(jpe?g|gif|png|svg|woff|woff2|ttf|eot|wav|mp3)$/,
+      use: [
+        'url-loader?limit=10000',
+        'img-loader'
+      ]
+    }, {
       test: /\.scss$/,
-      use: ExtractTextPlugin.extract({
-        fallback: 'style-loader',
-        use: ['css-loader', 'sass-loader']
-      })
+      use: [{
+        loader: 'style-loader'
+      }, {
+        loader: 'css-loader'
+      }, {
+        loader: 'sass-loader'
+      }]
     }, {
       test: /\.html$/,
       use: [{
@@ -98,7 +107,6 @@ const clientConfig = {
     new HtmlWebpackPlugin({
       template: path.resolve('client/index.html')
     }),
-    new ExtractTextPlugin('index.css'),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: function (module) {
@@ -114,30 +122,48 @@ const clientConfig = {
 // as that is what you use to require the actual node modules 
 // in your code. Then use the complete path to point to the correct
 // file and make sure webpack does not try to parse it
-if (PRODUCTION) {
+// if (PRODUCTION) {
 
-  var alias = {};
-  var deps = [];
+//   var externals = [];
+//   var alias = {};
 
-  [
-    'angular/angular.min.js',
-    'angular-animate/angular-animate.min.js',
-    'angular-aria/angular-aria.min.js',
-    'angular-material/angular-material.min.js',
-    'angular-ui-router/release/angular-ui-router.min.js',
-  ]
-  .forEach(function (dep) {
-    var depPath = path.resolve(NODE_MODULES, dep);
-    var name = dep.split(path.sep)[0];
-    alias[name] = depPath;
-    deps.push(name);
-  });
+//   [
+//     {
+//       name: 'angular',
+//       file: 'angular.min.js'
+//     },
+//     {
+//       name: 'angular-animate',
+//       file: 'angular-animate.min.js'
+//     },
+//     {
+//       name: 'angular-aria',
+//       file: 'angular-aria.min.js'
+//     },
+//     {
+//       name: 'angular-material',
+//       file: 'angular-material.min.js'
+//     },
+//     {
+//       name: 'angular-css',
+//       file: 'angular-css.min.js'
+//     },
+//     {
+//       name: 'angular-ui-router',
+//       file: 'release/angular-ui-router.min.js'
+//     }
+//   ]
+//   .forEach(function (dep) {
+//     var depPath = path.resolve(NODE_MODULES, path.join(dep.name, dep.file));
+//     alias[dep.name] = depPath;
+//     externals.push(dep.name);
+//   });
 
-  clientConfig.externals = deps;
-  clientConfig.resolve = {
-    alias: alias
-  };
-}
+//   clientConfig.externals = externals;
+//   clientConfig.resolve = {
+//     alias: alias
+//   };
+// }
 
 // Notice that both configurations are exported
 module.exports = [serverConfig, clientConfig];

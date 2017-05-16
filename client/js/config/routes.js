@@ -1,6 +1,7 @@
 'use strict';
 
 export default function ($stateProvider, $urlRouterProvider) {
+  'ngInject';
 
   $stateProvider
     .state({
