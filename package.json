@@ -15,7 +15,8 @@
   "author": "Eric LEON",
   "license": "ISC",
   "engines": {
-    "node": "7.x"
+    "node": "7.x",
+    "npm": "4.6.x"
   },
   "dependencies": {
     "angular": "^1.6.4",
