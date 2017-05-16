@@ -78,8 +78,7 @@ const clientConfig = {
     }, {
       test: /\.(jpe?g|gif|png|svg|woff|woff2|ttf|eot|wav|mp3)$/,
       use: [
-        'url-loader?limit=10000',
-        'img-loader'
+        'url-loader?limit=10000'
       ]
     }, {
       test: /\.s?css$/,
