@@ -25,7 +25,7 @@ let passport = auth();
 let env = settings();
 
 // Configure logger device
-logs.configure(app, env.runMode == 'production');
+logs.configure(app, env);
 
 // Tell express that messages bodies will be JSON formatted
 app.use(bodyParser.json());

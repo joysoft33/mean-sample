@@ -2,13 +2,14 @@
 
 import rfs from 'rotating-file-stream';
 import logger from 'morgan';
+import path from 'path';
 import fs from 'fs';
 
 export default {
   
-  configure: (app, production) => {
-    if (production) {
-      var logDirectory = 'dist/logs';
+  configure: (app, env) => {
+    if (env.runMode === 'production') {
+      var logDirectory = path.join(env.rootPath, 'logs');
       // Ensure log directory exists
       fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
       // Set logger device on a rotating write stream

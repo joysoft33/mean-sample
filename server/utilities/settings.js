@@ -16,6 +16,7 @@ function settings() {
   }
 
   env.publicPath = 'dist/public';
+  env.rootPath = 'dist';
   env.runMode = RUN_MODE;
 
   return env;
