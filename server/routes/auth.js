@@ -19,7 +19,7 @@ export default (router, passport) => {
     return auth.authenticate(req, res, next);
   });
 
-  // Handle the callback after facebook has authenticated the user
+  // Handle the callback after a facebook authentication error
   router.use('/auth/facebook/callback', (err, req, res, next) => {
     return auth.authenticateError(err, req, res, next);
   });
