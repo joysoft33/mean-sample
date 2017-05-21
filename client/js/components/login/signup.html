@@ -1,0 +1,45 @@
+<section>
+  <md-toolbar class="md-accent">
+    <div class="md-toolbar-tools">
+      <h2>Sign up</h2>
+      <span flex></span>
+      <a ui-sref="login.signin">I already have an account</a>
+    </div>
+  </md-toolbar>
+  <md-content class="signup md-whiteframe-z1">
+    <form name="form" method="post" ng-submit="$ctrl.signup()" class="col s12" novalidate>
+      <md-input-container class="md-block">
+        <label>Last name</label>
+        <input required md-no-asterisk name="lastName" ng-model="$ctrl.user.lastName">
+        <div ng-messages="form.lastName.$error">
+          <div ng-message="required">This field is required.</div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block">
+        <label>First name</label>
+        <input required md-no-asterisk name="firstName" ng-model="$ctrl.user.firstName">
+        <div ng-messages="form.firstName.$error">
+          <div ng-message="required">This field is required.</div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block">
+        <label>Email address</label>
+        <input required md-no-asterisk name="email" ng-model="$ctrl.user.email">
+        <div ng-messages="form.email.$error">
+          <div ng-message="required">This field is required.</div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block">
+        <label>Password</label>
+        <input required md-no-asterisk name="password" type="password" ng-model="$ctrl.user.password">
+        <div ng-messages="form.password.$error">
+          <div ng-message="required">This field is required.</div>
+        </div>
+      </md-input-container>
+      <md-button class="md-raised" type="submit">
+        Validate
+      </md-button>
+    </form>
+    </div>
+  </md-content>
+</section>

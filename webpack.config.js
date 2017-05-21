@@ -4,7 +4,6 @@ const nodeExternals = require('webpack-node-externals');
 const MinifierPlugin = require('babili-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
 
 const PRODUCTION = process.env.NODE_ENV === 'production';
 
@@ -60,7 +59,7 @@ const clientConfig = {
   },
   output: {
     path: path.resolve('dist/public'),
-    filename: '[name].[chunkhash].js',
+    filename: '[name].js',
   },
   module: {
     rules: [{
@@ -119,8 +118,7 @@ const clientConfig = {
       minChunks: ({
         resource
       }) => /node_modules/.test(resource)
-    }),
-    new CleanObsoleteChunks()
+    })
   ].filter(e => e),
   devtool: PRODUCTION ? 'source-map' : 'cheap-module-eval-source-map',
 };

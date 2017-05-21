@@ -7,9 +7,9 @@ let config = {
     cookieToken: 'mean-token-dev',
     jwtSecret: 'cJbdB3t$',
     facebookAuth: {
-      clientID: '000000',
-      clientSecret: '00000',
-      callbackURL: 'cb'
+      clientID: process.env.FACEBOOK_ClientId,
+      clientSecret: process.env.FACEBOOK_ClientSecret,
+      callbackURL: '/api/auth/facebook/callback'
     }
   },
   
@@ -20,7 +20,7 @@ let config = {
     facebookAuth: {
       clientID: '000000',
       clientSecret: '00000',
-      callbackURL: 'cb'
+      callbackURL: '/api/auth/facebook/callback'
     }
   }
 };

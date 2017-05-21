@@ -12,10 +12,15 @@ export default (router, passport) => {
 
   router.get('/auth/facebook', passport.authenticate('facebook', {
     scope: 'email'
-  }))
+  }));
 
   // Handle the callback after facebook has authenticated the user
   router.get('/auth/facebook/callback', auth.facebook(passport), (req, res, next) => {
     return auth.authenticate(req, res, next);
+  });
+
+  // Handle the callback after facebook has authenticated the user
+  router.use('/auth/facebook/callback', (err, req, res, next) => {
+    return auth.authenticateError(err, req, res, next);
   });
 }

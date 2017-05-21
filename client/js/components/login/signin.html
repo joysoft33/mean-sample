@@ -1,0 +1,34 @@
+<section>
+  <md-toolbar class="md-accent">
+    <div class="md-toolbar-tools">
+      <h2>Sign in</h2>
+      <span flex></span>
+      <a ui-sref="login.signup">Create a new account</a>
+    </div>
+  </md-toolbar>
+  <md-content class="signin md-whiteframe-z1">
+    <form name="form" method="post" ng-submit="$ctrl.signin()" novalidate>
+      <md-input-container class="md-block">
+        <label>Email address</label>
+        <input required md-no-asterisk name="email" ng-model="$ctrl.user.email">
+        <div ng-messages="form.email.$error">
+          <div ng-message="required">This field is required.</div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block">
+        <label>Password</label>
+        <input required md-no-asterisk name="password" type="password" ng-model="$ctrl.user.password">
+        <div ng-messages="form.password.$error">
+          <div ng-message="required">This field is required.</div>
+        </div>
+      </md-input-container>
+      <md-button class="md-raised" type="submit">
+        Connect
+      </md-button>
+      <md-button class="md-raised md-primary" ng-click="$ctrl.facebook()">
+        Facebook
+      </md-button>
+    </form>
+    </div>
+  </md-content>
+</section>

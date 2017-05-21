@@ -1,12 +1,12 @@
 'use strict';
 
+import querystring from 'querystring';
 import User from '../models/user';
 
 class AuthController {
 
   // Authenticate user using our "LocalStrategy" in passport.js
   local(req, res, next, passport) {
-
     // Second parameter is our own callback so that we can manage error messages the way we want
     return passport.authenticate('local', (err, user, info) => {
       if (err) {
@@ -35,8 +35,20 @@ class AuthController {
       // Redirect to the client view
       res.redirect("/#!/auth/callback/" + token);
     } else {
-      res.send(401);
+      authenticateError(null, req, res, next);
     }
+  }
+
+  authenticateError(err, req, res, next) {
+    if (err) { 
+      // Remove uneeded attributes
+      delete err.status;
+      delete err.stack;
+    } else {
+      err = { code: 0 }; 
+    }
+    // Redirect to the client view
+    res.redirect("/#!/auth/callback?" + querystring.stringify(err));
   }
 }
 

@@ -2,12 +2,15 @@
   <div class="md-toolbar-tools">
     <img src="../../../images/angularjs.png" />
     <h3>MEAN sample app</h3>
+    <span flex></span>
+    <a ui-sref="login.signin" ng-if="!$ctrl.user">Sign in</a>
+    <a href="" ng-click="$ctrl.logout()" ng-if="$ctrl.user">Disconnect</a>
   </div>
 </md-toolbar>
 <md-content class="md-padding">
   <md-nav-bar md-selected-nav-item="$ctrl.selectedTab" aria-label="menu">
     <md-nav-item md-nav-sref="home" sref-opts="{reload:true, notify:true}" name="home">Home</md-nav-item>
-    <md-nav-item md-nav-sref="users" sref-opts="{reload:true, notify:true}" name="users">Users</md-nav-item>
+    <md-nav-item md-nav-sref="users" sref-opts="{reload:true, notify:true}" name="users" ng-if="$ctrl.user">Users</md-nav-item>
   </md-nav-bar>
   <md-content layout-padding>
     <div class="ext-content">

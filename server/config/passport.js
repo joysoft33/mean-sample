@@ -35,29 +35,30 @@ export default () => {
   }, (email, password, done) => {
     // Ensure that this will be executed asynchronously
     process.nextTick(function () {
+      
       User.findOne({
-        email: email
-      })
-      .select("+password")
-      .exec(function (err, user) {
-        if (err) {
-          return done(err)
-        }
-        if (!user) {
-          return done(null, false, {
-            message: 'Incorrect email or password.'
-          });
-        }
-        // We are checking if password is the same as the one stored and encrypted in db
-        user.validPassword(password, function(err, match) {
-          if (err || !match) {
+          email: email
+        })
+        .select("+password")
+        .exec(function (err, user) {
+          if (err) {
+            return done(err)
+          }
+          if (!user) {
             return done(null, false, {
               message: 'Incorrect email or password.'
             });
           }
-          return done(null, user);
+          // We are checking if password is the same as the one stored and encrypted in db
+          user.validPassword(password, function (err, match) {
+            if (err || !match) {
+              return done(null, false, {
+                message: 'Incorrect email or password.'
+              });
+            }
+            return done(null, user);
+          });
         });
-      });
     });
   }));
 
@@ -65,36 +66,44 @@ export default () => {
   passport.use(new Facebook({
     clientID: env.facebookAuth.clientID,
     clientSecret: env.facebookAuth.clientSecret,
-    callbackURL: '/auth/facebook/callback',
+    callbackURL: env.facebookAuth.callbackURL,
     profileFields: ['id', 'name', 'photos', 'emails']
   }, (token, refreshToken, profile, done) => {
     // Ensure that this will be executed asynchronously
     process.nextTick(function () {
-      // Retrieve User or create a new one if none was found
-      // Use facebook id as unique key to retrieve user
-      // Documentation: https://github.com/jaredhanson/passport-facebook
+
       User.findOne({
-        'facebook.id': profile.id
+        'email': profile.emails[0].value
       }, (err, user) => {
 
-        if (err)
+        if (err) {
           return done(err);
+        }
 
-        if (user)
+        if (!user) {
+          user = new User();
+          user.email = profile.emails[0].value || '';
+          user.firstName = profile.name.givenName;
+          user.lastName = profile.name.familyName;
+        } else if (user.facebook.id) {
           return done(null, user);
-        
-        let newUser = new User();
+        }
 
-        newUser.email = profile.emails[0].value || '';
-        newUser.firstName = profile.name.givenName;
-        newUser.lastName = profile.name.familyName;
-        newUser.facebook.id = profile.id;
-        newUser.facebook.token = token;
-        newUser.facebook.photo = profile.photos[0].value || '';
+        user.facebook.token = token;
+        user.facebook.id = profile.id;
+        user.facebook.photo = profile.photos[0].value || '';
 
-        newUser.save((err) => {
-          if (err) throw err;
-          return done(null, newUser);
+        User.update({
+          _id: user._id
+        }, user, {
+          upsert: true,
+          setDefaultsOnInsert: true
+        }, (err, newUser) => {
+          if (err) {
+            return done(err);
+          } else {
+            return done(null, newUser);
+          }
         });
       });
     });

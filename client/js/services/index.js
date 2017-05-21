@@ -1,12 +1,13 @@
 'use strict';
 
 import angular from 'angular';
+import cookies from 'angular-cookies';
 
-import authService from './auth';
 import usersService from './users';
+import authService from './auth';
 
-export default angular.module('appServices', [])
+export default angular.module('appServices', ['ngCookies'])
 
-  .service('AuthService', authService)
   .service('UsersService', usersService)
+  .service('AuthService', authService)
   .name;

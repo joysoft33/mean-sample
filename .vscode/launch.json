@@ -5,10 +5,26 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch",
-      "type": "node2",
+      "name": "Attach",
+      "type": "node",
+      "request": "attach",
+      "protocol": "auto", 
+      "sourceMaps": true,
+      "port": 5858
+    },
+    {
+      "name": "Launch localhost",
+      "type": "chrome",
       "request": "launch",
-      "program": "${workspaceRoot}/server.js",
+      "url": "http://localhost:8080/",
+      "webRoot": "${workspaceRoot}/dist/public",
+      "sourceMaps": true
+    },
+    {
+      "name": "Launch Node server",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/dist/server.js",
       "stopOnEntry": false,
       "args": [],
       "cwd": "${workspaceRoot}",
@@ -18,8 +34,7 @@
         "--nolazy"
       ],
       "env": {
-        "NODE_ENV": "production"
-        //"NODE_ENV": "development"
+        "NODE_ENV": "development"
       },
       "console": "internalConsole",
       "sourceMaps": true,
