@@ -10,6 +10,7 @@
     "serve": "nodemon -w dist/server.js dist/server.js",
     "watch-and-serve": "concurrently --kill-others \"npm run watch\" \"npm run serve\"",
     "start": "NODE_ENV=production node dist/server.js",
+    "production": "NODE_ENV=production node dist/server.js",
     "heroku-postbuild": "webpack -p --progress"
   },
   "author": "Eric LEON",
