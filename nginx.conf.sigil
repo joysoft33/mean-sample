@@ -1,12 +1,12 @@
 upstream {{ .APP }} {
-  server localhost:3000;
+  server localhost:8080;
   keepalive 8;
 }
 
 # the nginx server instance
 server {
   listen 80;
-  root {{ .DOKKU_ROOT }}/{{ .APP }};
+  root {{ .DOKKU_ROOT }}/{{ .APP }}/dist/public;
   server_name {{ .NOSSL_SERVER_NAME }};
   
   gzip_types 
