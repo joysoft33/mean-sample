@@ -12,16 +12,16 @@ const SALT_WORK_FACTOR = 10;
 let UserSchema = new mongoose.Schema({
   email: {
     type: String,
-    require: true,
+    required: true,
     unique: true
   },
   firstName: {
     type: String,
-    require: true
+    required: true
   },
   lastName: {
     type: String,
-    require: true
+    required: true
   },
   isAdmin: {
     type: Boolean,
@@ -29,7 +29,7 @@ let UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    require: true,
+    required: true,
     select: false
   },
   facebook: {

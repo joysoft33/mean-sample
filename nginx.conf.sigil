@@ -1,5 +1,21 @@
+#{{ range $port_map := .PROXY_PORT_MAP | split " " }}
+#{{ $port_map_list := $port_map | split ":" }}
+#{{ $scheme := index $port_map_list 0 }}
+#{{ $listen_port := index $port_map_list 1 }}
+#{{ $upstream_port := index $port_map_list 2 }}
+
+#upstream {{ $.APP }}-{{ $upstream_port }} {
+#  {{ range $listeners := $.DOKKU_APP_LISTENERS | split " " }}
+#  {{ $listener_list := $listeners | split ":" }}
+#  {{ $listener_ip := index $listener_list 0 }}
+#  {{ $listener_port := index $listener_list 1 }}
+#  server {{ $listener_ip }}:{{ $listener_port }};
+#  keepalive 8;
+#{{ end }}
+
 upstream {{ .APP }} {
-  server localhost:8080;
+#  server localhost:$upstream_port;
+  server 172.17.0.3:5000;
   keepalive 8;
 }
 

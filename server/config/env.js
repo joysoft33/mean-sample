@@ -3,7 +3,7 @@
 let config = {
 
   'development': {
-    db: process.env.MONGODB_URI ||  'mongodb://localhost:27017/mean-sample-dev',
+    db: process.env.MONGO_URL ||  'mongodb://localhost:27017/mean-sample-dev',
     cookieToken: 'mean-token-dev',
     jwtSecret: 'cJbdB3t$',
     facebookAuth: {
@@ -14,7 +14,7 @@ let config = {
   },
   
   'production': {
-    db: process.env.MONGODB_URI ||  'mongodb://localhost:27017/mean-sample',
+    db: process.env.MONGO_URL ||  'mongodb://localhost:27017/mean-sample',
     cookieToken: 'mean-token',
     jwtSecret: 'cJbdB3t$',
     facebookAuth: {
