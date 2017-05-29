@@ -10,6 +10,7 @@ export default {
     'ngInject';
 
     this.$onInit = () => {
+      // Force logout before atempting a new login
       AuthService.logout();
     };
   }

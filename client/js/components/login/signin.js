@@ -10,6 +10,7 @@ export default {
     'ngInject';
 
     this.signin = () => {
+      // Local authentication mode
       AuthService.login(this.user).then((user) => {
         $state.go('users');
       }).catch((err) => {
@@ -20,6 +21,7 @@ export default {
     };
 
     this.facebook = () => {
+      // FB authentication request
       $window.location = CONSTANTS.serverFacebookUrl;
     }
   }

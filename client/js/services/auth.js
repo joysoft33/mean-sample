@@ -24,6 +24,7 @@ export default function ($http, $cookies, $rootScope, CONSTANTS) {
 
   this.logout = () => {
     return new Promise((resolve, reject) => {
+      // Just remove the authentication token
       this.removeToken();
       resolve();
     });
