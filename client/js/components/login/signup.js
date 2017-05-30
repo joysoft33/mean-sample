@@ -11,7 +11,7 @@ export default {
 
     this.signup = () =>  {
       UsersService.create(this.user).then((res) => {
-        return AuthService.setToken(res.data.token);
+        return AuthService.setToken(res.token);
       }).then((user) => {
         $state.go('users');
       }).catch((err) => {

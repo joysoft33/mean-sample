@@ -38,10 +38,9 @@ class UsersController {
       if (err) {
         next(err);
       } else {
-        // Don't return the password field!!
-        var o = user.toObject();
-        delete o.password;
-        res.send(o);
+        res.json({
+          token: user.generateJWT()
+        });
       }
     });
   }
