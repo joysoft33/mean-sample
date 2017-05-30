@@ -4,6 +4,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import favicon from 'serve-favicon';
 import debug from 'debug';
 
 // Get server settings
@@ -27,7 +28,9 @@ let env = settings();
 // Configure logger device
 logs.configure(app, env);
 
-// Tell express that messages bodies will be JSON formatted
+// Tell Express where is our favicon
+app.use(favicon(env.publicPath + '/favicon.ico'));
+// Tell Express that messages bodies will be JSON formatted
 app.use(bodyParser.json());
 // Only parses urlencoded bodies (gzip and deflate enabled)
 app.use(bodyParser.urlencoded({

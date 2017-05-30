@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
-const MinifierPlugin = require('babili-webpack-plugin');
+const BabiliPlugin = require('babili-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
@@ -36,7 +36,9 @@ const serverConfig = {
     }],
   },
   plugins: [
-    PRODUCTION && new MinifierPlugin(),
+    PRODUCTION && new BabiliPlugin({
+      comments: false
+    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     }),
@@ -75,9 +77,9 @@ const clientConfig = {
         }
       }]
     }, {
-      test: /\.(jpe?g|gif|png|svg|woff|woff2|ttf|eot|wav|mp3)$/,
+      test: /\.(jpe?g|gif|png|svg|woff|woff2|ttf|eot|wav|mp3|ico)$/,
       use: [
-        'url-loader?limit=10000'
+        'url-loader?limit=1'
       ]
     }, {
       test: /\.s?css$/,
@@ -106,12 +108,15 @@ const clientConfig = {
   },
   plugins: [
     new ExtractTextPlugin('[name].css'),
-    PRODUCTION && new MinifierPlugin(),
+    PRODUCTION && new BabiliPlugin({
+      comments: false
+    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     }),
     new HtmlWebpackPlugin({
-      template: path.resolve('client/index.html')
+      template: path.resolve('client/index.html'),
+      favicon: path.resolve('client/favicon.ico')
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
