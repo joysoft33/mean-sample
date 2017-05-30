@@ -7,6 +7,7 @@ export default {
   template: template,
 
   controller: function (UsersService, AuthService, $state, $mdToast) {
+    'ngInject';
 
     this.signup = () =>  {
       UsersService.create(this.user).then((res) => {
