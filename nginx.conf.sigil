@@ -1,8 +1,13 @@
+{{ range .DOKKU_APP_LISTENERS | split " " }}
+  {{ $server := . }};
+{{ end }}
+
 # the nginx server instance
 server {
   listen [::]:{{ .NGINX_PORT }};
   server_name {{ .NOSSL_SERVER_NAME }};
-  root {{ .DOKKU_ROOT }}/{{ .APP }}/dist/public;
+#  root {{ .DOKKU_ROOT }}/{{ .APP }}/dist/public;
+  root {{ $server/dist/public }};
   
   gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript image/svg+xml application/vnd.ms-fontobject;
 
@@ -31,7 +36,5 @@ server {
 }
 
 upstream {{ .APP }}-5000 {
-{{ range .DOKKU_APP_LISTENERS | split " " }}
-  server {{ . }};
-{{ end }}
+  server $server;
 }
