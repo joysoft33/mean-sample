@@ -7,7 +7,7 @@ server {
   listen [::]:{{ .NGINX_PORT }};
   server_name {{ .NOSSL_SERVER_NAME }};
 #  root {{ .DOKKU_ROOT }}/{{ .APP }}/dist/public;
-  root {{ $server/dist/public }};
+  root {{ $server }}/dist/public;
   
   gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript image/svg+xml application/vnd.ms-fontobject;
 
@@ -20,9 +20,10 @@ server {
   }
 
   location /api {
-    {{ range .DOKKU_APP_LISTENERS | split " " }}
-      proxy_pass http://{{ . }};
-    {{ end }}
+    proxy_pass http://$server;
+#    {{ range .DOKKU_APP_LISTENERS | split " " }}
+#      proxy_pass http://{{ . }};
+#    {{ end }}
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header Host $http_host;
     proxy_set_header X-NginX-Proxy true;
