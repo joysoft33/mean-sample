@@ -1,6 +1,6 @@
 'use strict';
 
-export default function (AuthService, $log, $state, $transitions) {
+export default function (AuthService, $log, $state, $q, $transitions) {
   'ngInject';
 
   // ui-router transitions
@@ -9,14 +9,23 @@ export default function (AuthService, $log, $state, $transitions) {
     // Get the requested route
     var to = transition.to();
 
-    if (!to.publicRoute && !AuthService.getCurrent()) {
+    if (!to.publicRoute) {
 
-      // User isn’t authenticated, redirect to login page
-      $log.debug(to.url + ' need authentication');
+      const defer = $q.defer();
 
-      return transition.router.stateService.target("login.signin", {
-        redirect: to.name
+      AuthService.getCurrent().then(() => {
+
+        // User isn’t authenticated, redirect to login page
+        $log.debug(to.url + ' need authentication');
+
+        defer.resolve(transition.router.stateService.target("login.signin", {
+          redirect: to.name
+        }));
+      }).catch((err) => {
+        defer.reject(err);
       });
+
+      return defer.promise;
     }
   });
 
