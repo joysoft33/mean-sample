@@ -23,11 +23,11 @@ export default (router, authCheck) => {
     return ctrl.create(req, res, next);
   });
 
-  router.put('/users/:id', function (req, res, next) {
+  router.put('/users/:id', authCheck, function (req, res, next) {
     return ctrl.update(req, res, next, req.user);
   });
 
-  router.delete('/users/:id', function (req, res, next) {
+  router.delete('/users/:id', authCheck, function (req, res, next) {
     return ctrl.delete(req, res, next, req.user);
   });
 
