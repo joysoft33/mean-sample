@@ -1,12 +1,12 @@
 'use strict';
 
-export default function ($http) {
+export default function ($http, $q) {
   'ngInject';
 
   const USERS_URL = '/api/users/';
 
   this.create = (user) => {
-    return new Promise((resolve, reject) => {
+    return $q((resolve, reject) => {
       $http.post(USERS_URL, user).then((response) => {
         resolve(response.data);
       })
@@ -17,7 +17,7 @@ export default function ($http) {
   }
 
   this.update = (user) => {
-    return new Promise((resolve, reject) => {
+    return $q((resolve, reject) => {
       $http.put(USERS_URL + user._id, user).then((response) => {
         resolve(response.data);
       })

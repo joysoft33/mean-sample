@@ -1,42 +1,41 @@
 'use strict';
 
-export default function ($http, $cookies, $rootScope, CONSTANTS) {
+export default function ($http, $q, $timeout, $cookies, $rootScope, CONSTANTS) {
   'ngInject';
 
   this.currentUser = null;
 
   this.login = (credential) => {
-    return new Promise((resolve, reject) => {
+    return $q((resolve, reject) => {
       // Let server authenticate the given email/password
       $http.post(CONSTANTS.authUrl, credential).then((res) => {
-          return this.saveToken(res.data.token);
-        })
-        .then((user) => {
-          this.currentUser = user;
-          resolve(this.currentUser);
-        })
-        .catch((err) => {
-          this.removeToken();
-          reject(err);
-        });
+        return this.saveToken(res.data.token);
+      })
+      .then((user) => {
+        this.currentUser = user;
+        resolve(this.currentUser);
+      })
+      .catch((err) => {
+        this.removeToken();
+        reject(err);
+      });
     });
   };
 
   this.logout = () => {
-    return new Promise((resolve, reject) => {
+    return $timeout(() => {
       // Just remove the authentication token
       this.removeToken();
-      resolve();
-    });
+    }, 0);
   };
 
   this.getCurrent = () => {
-    return new Promise((resolve, reject) => {
+    return $q((resolve, reject) => {
       // Get the authentication token if any
       var token = this.getToken();
       if (!token) {
         // No existing token, not connected
-        return resolve(null);
+        return reject();
       }
       if (this.currentUser) {
         // Current user has already been set, return it
@@ -44,44 +43,45 @@ export default function ($http, $cookies, $rootScope, CONSTANTS) {
       }
       // Get user from saved token
       this._decodePayload(token.split('.')[1]).then((payload) => {
-          this.currentUser = payload;
-          resolve(payload);
-        })
-        .catch((err) => {
-          this.removeToken();
-          reject(err);
-        });
+        this.currentUser = payload;
+        resolve(payload);
+      })
+      .catch((err) => {
+        this.removeToken();
+        reject(err);
+      });
     });
   };
 
   this.setToken = (token) => {
-    return new Promise((resolve, reject) => {
+    return $q((resolve, reject) => {
       // Decode and save the received token
       this.saveToken(token).then((payload) => {
-          // Store the decoded user info
-          this.currentUser = payload;
-          resolve(payload);
-        })
-        .catch((err) => {
-          this.removeToken();
-          reject(err);
-        });
+        // Store the decoded user info
+        this.currentUser = payload;
+        resolve(payload);
+      })
+      .catch((err) => {
+        this.removeToken();
+        reject(err);
+      });
     });
   };
 
   this.saveToken = (token) => {
-    return new Promise((resolve, reject) => {
+    return $q((resolve, reject) => {
+      // Decode token payload before saving it into the cookie
       this._decodePayload(token.split('.')[1]).then((payload) => {
-          // Add jwt token to auth header for all requests made by the $http service
-          $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-          $rootScope.$broadcast(CONSTANTS.authEvent, payload);
-          $cookies.put(CONSTANTS.authCookie, token);
-          resolve(payload);
-        })
-        .catch((err) => {
-          this.removeToken();
-          reject(err);
-        });
+        // Add jwt token to auth header for all requests made by the $http service
+        $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+        $rootScope.$broadcast(CONSTANTS.authEvent, payload);
+        $cookies.put(CONSTANTS.authCookie, token);
+        resolve(payload);
+      })
+      .catch((err) => {
+        this.removeToken();
+        reject(err);
+      });
     });
   };
 
@@ -101,18 +101,14 @@ export default function ($http, $cookies, $rootScope, CONSTANTS) {
 
   // Private methods
   this._decodePayload = (data) => {
-    return new Promise((resolve, reject) => {
-      try {
-        // Decode the encrypted payload
-        var payload = JSON.parse(decodeURI(this._base64ToUTF8(this._urlBase64Decode(data))));
-        // Control the expiration date
-        if (Math.round(new Date().getTime() / 1000) <= payload.exp) {
-          resolve(payload);
-        } else {
-          reject('Expired');
-        }
-      } catch (err) {
-        reject(err);
+    return $q((resolve, reject) => {
+      // Decode the encrypted payload
+      var payload = JSON.parse(decodeURI(this._base64ToUTF8(this._urlBase64Decode(data))));
+      // Control the expiration date
+      if (Math.round(new Date().getTime() / 1000) <= payload.exp) {
+        resolve(payload);
+      } else {
+        reject('Expired');
       }
     });
   };

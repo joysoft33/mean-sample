@@ -50,11 +50,11 @@ app.use(passport.initialize())
 app.use('/api', router(app, passport));
 
 // Default home page
-app.get('/', function (req, res) {
-  res.sendFile('index.html', {
-    root: env.publicPath
-  });
-});
+// app.get('/', function (req, res) {
+//   res.sendFile('index.html', {
+//     root: env.publicPath
+//   });
+// });
 
 // Unknown route handler
 app.use((req, res) => {

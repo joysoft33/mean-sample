@@ -29,11 +29,10 @@ export default {
     };
 
     this.logout = () => {
+      // Disconnect and display home page
       AuthService.logout().then(() => {
-        // Goto home page when disconnected
         $state.go('home');
-      })
-      .catch((err) => {});
+      });
     };
 
     // Listen at authentication messages (see auth service)

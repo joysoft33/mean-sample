@@ -30,7 +30,8 @@ const serverConfig = {
       use: [{
         loader: 'babel-loader',
         options: {
-          presets: require('./babelrc.js')(true)
+          presets: require('./babelrc.js')(true),
+          cacheDirectory: true
         }
       }]
     }],
@@ -48,7 +49,7 @@ const serverConfig = {
       raw: true
     })
   ].filter(e => e),
-  devtool: 'source-map',
+  devtool: PRODUCTION ? 'source-map' : 'eval-source-map',
 };
 
 /**
@@ -73,7 +74,8 @@ const clientConfig = {
       }, {
         loader: 'babel-loader',
         options: {
-          presets: require('./babelrc.js')(false)
+          presets: require('./babelrc.js')(false),
+          cacheDirectory: true
         }
       }]
     }, {
@@ -125,7 +127,7 @@ const clientConfig = {
       }) => /node_modules/.test(resource)
     })
   ].filter(e => e),
-  devtool: PRODUCTION ? 'source-map' : 'cheap-module-eval-source-map',
+  devtool: PRODUCTION ? 'source-map' : 'eval-source-map',
 };
 
 // Notice that both configurations are exported

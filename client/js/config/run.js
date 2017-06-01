@@ -11,21 +11,21 @@ export default function (AuthService, $log, $state, $q, $transitions) {
 
     if (!to.publicRoute) {
 
-      const defer = $q.defer();
+      return $q((resolve, reject) => {
 
-      AuthService.getCurrent().then(() => {
-
-        // User isn’t authenticated, redirect to login page
-        $log.debug(to.url + ' need authentication');
-
-        defer.resolve(transition.router.stateService.target("login.signin", {
-          redirect: to.name
-        }));
-      }).catch((err) => {
-        defer.reject(err);
+        AuthService.getCurrent().then(() => {
+          $log.debug(to.url + ' authenticated');
+          resolve();
+        })
+        .catch(() => {
+          // User isn’t authenticated
+          $log.debug(to.url + ' need authentication');
+          // Redirect to login page
+          resolve(transition.router.stateService.target("login.signin", {
+            redirect: to.name
+          }));
+        });
       });
-
-      return defer.promise;
     }
   });
 

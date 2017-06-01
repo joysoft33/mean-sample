@@ -32,6 +32,7 @@ export default function ($stateProvider, $urlRouterProvider) {
     })
     .state('callback', {
       url: '/auth/callback/:token',
+      publicRoute: true,      
       params: {
         code: null,
         status: null,
@@ -39,7 +40,7 @@ export default function ($stateProvider, $urlRouterProvider) {
       },
       controller: function (AuthService, $stateParams, $state) {
         'ngInject';
-        console.log($stateParams);
+
         if ($stateParams.token) {
           AuthService.setToken($stateParams.token).then((user) => {
             $state.go('home');
