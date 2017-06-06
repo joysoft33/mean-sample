@@ -40,8 +40,17 @@ const serverConfig = {
       use: [{
         loader: 'babel-loader',
         options: {
-          presets: require('./babelrc.js')(true),
-          cacheDirectory: true
+          presets: [
+            ['es2015'],
+            ['env', {
+              targets: {
+                node: 'current'
+              },
+              modules: false,
+              debug: true
+            }],
+            ['angular']
+          ]
         }
       }]
     }],
@@ -73,6 +82,7 @@ const clientConfig = {
     rules: [{
       enforce: 'pre',
       test: /\.js$/,
+      exclude: /node_modules/,
       use: [{
         loader: 'eslint-loader',
         options: {
@@ -82,22 +92,34 @@ const clientConfig = {
       }]
     }, {
       test: /\.js$/,
-      include: path.resolve('client'),
       exclude: /node_modules/,
+      include: path.resolve('client'),
       use: [{
         loader: 'ng-annotate-loader'
       }, {
         loader: 'babel-loader',
         options: {
-          presets: require('./babelrc.js')(false),
-          cacheDirectory: true
+          presets: [
+            ['es2015'],
+            ['env', {
+              targets: {
+                browsers: ['> 5%', 'last 2 versions']
+              },
+              modules: false,
+              debug: true
+            }],
+            ['angular']
+          ]
         }
       }]
     }, {
       test: /\.(jpe?g|gif|png|svg|woff|woff2|ttf|eot|wav|mp3|ico)$/,
-      use: [
-        'url-loader?limit=1'
-      ]
+      use: [{
+        loader: 'url-loader',
+        options: {
+          limit: 1
+        }
+      }]
     }, {
       test: /\.s?css$/,
       use: ExtractTextPlugin.extract({
@@ -127,7 +149,7 @@ const clientConfig = {
     new ExtractTextPlugin('[name].css'),
     PRODUCTION && new BabiliPlugin(),
     new webpack.DefinePlugin({
-      NODE_ENV: process.env.NODE_ENV
+      PRODUCTION: JSON.stringify(PRODUCTION)
     }),
     new HtmlWebpackPlugin({
       template: path.resolve('client/index.html'),
