@@ -79,8 +79,10 @@
   },
   "babel": {
     "presets": [
-      "es2015"
+      "es2015",
+      "babili"
     ],
+    "comments": false,
     "sourceMaps": true,
     "retainLines": true
   }

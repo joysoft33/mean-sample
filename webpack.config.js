@@ -25,16 +25,16 @@ const serverConfig = {
   externals: [nodeExternals()],
   module: {
     rules: [{
-    //   enforce: 'pre',
-    //   test: /\.js$/,
-    //   use: [{
-    //     loader: 'eslint-loader',
-    //     options: {
-    //       failOnWarning: false,
-    //       failOnError: true
-    //     }
-    //   }]
-    // }, {
+      enforce: 'pre',
+      test: /\.js$/,
+      use: [{
+        loader: 'eslint-loader',
+        options: {
+          failOnWarning: false,
+          failOnError: true
+        }
+      }]
+    }, {
       test: /\.js$/,
       include: path.resolve('server'),
       use: [{
@@ -47,9 +47,7 @@ const serverConfig = {
     }],
   },
   plugins: [
-    PRODUCTION && new BabiliPlugin({
-      comments: false
-    }),
+    PRODUCTION && new BabiliPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     }),
@@ -76,16 +74,16 @@ const clientConfig = {
   },
   module: {
     rules: [{
-    //   enforce: 'pre',
-    //   test: /\.js$/,
-    //   use: [{
-    //     loader: 'eslint-loader',
-    //     options: {
-    //       failOnWarning: false,
-    //       failOnError: true
-    //     }
-    //   }]
-    // }, {
+      enforce: 'pre',
+      test: /\.js$/,
+      use: [{
+        loader: 'eslint-loader',
+        options: {
+          failOnWarning: false,
+          failOnError: true
+        }
+      }]
+    }, {
       test: /\.js$/,
       include: path.resolve('client'),
       exclude: /node_modules/,
@@ -130,9 +128,7 @@ const clientConfig = {
   },
   plugins: [
     new ExtractTextPlugin('[name].css'),
-    PRODUCTION && new BabiliPlugin({
-      comments: false
-    }),
+    PRODUCTION && new BabiliPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     }),
