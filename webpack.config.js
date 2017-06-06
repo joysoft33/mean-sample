@@ -48,9 +48,6 @@ const serverConfig = {
   },
   plugins: [
     PRODUCTION && new BabiliPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-    }),
     new webpack.BannerPlugin({
       banner: 'require("source-map-support").install();',
       entryOnly: false,
@@ -130,7 +127,7 @@ const clientConfig = {
     new ExtractTextPlugin('[name].css'),
     PRODUCTION && new BabiliPlugin(),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+      NODE_ENV: process.env.NODE_ENV
     }),
     new HtmlWebpackPlugin({
       template: path.resolve('client/index.html'),
