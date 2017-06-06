@@ -39,7 +39,7 @@ export default () => {
       User.findOne({
           email: email
         })
-        .select("+password")
+        .select('+password')
         .exec(function (err, user) {
           if (err) {
             return done(err)

@@ -25,6 +25,16 @@ const serverConfig = {
   externals: [nodeExternals()],
   module: {
     rules: [{
+      enforce: 'pre',
+      test: /\.js$/,
+      use: [{
+        loader: 'eslint-loader',
+        options: {
+          failOnWarning: false,
+          failOnError: true
+        }
+      }]
+    }, {
       test: /\.js$/,
       include: path.resolve('server'),
       use: [{
@@ -66,6 +76,16 @@ const clientConfig = {
   },
   module: {
     rules: [{
+      enforce: 'pre',
+      test: /\.js$/,
+      use: [{
+        loader: 'eslint-loader',
+        options: {
+          failOnWarning: false,
+          failOnError: true
+        }
+      }]
+    }, {
       test: /\.js$/,
       include: path.resolve('client'),
       exclude: /node_modules/,

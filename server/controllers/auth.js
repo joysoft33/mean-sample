@@ -33,7 +33,7 @@ class AuthController {
       let user = new User(req.user);
       let token = user.generateJWT();
       // Redirect to the client view
-      res.redirect("/#!/auth/callback/" + token);
+      res.redirect('/#!/auth/callback/' + token);
     } else {
       authenticateError(null, req, res, next);
     }
@@ -48,7 +48,7 @@ class AuthController {
       err = { code: 0 }; 
     }
     // Redirect to the client view
-    res.redirect("/#!/auth/callback?" + querystring.stringify(err));
+    res.redirect('/#!/auth/callback?' + querystring.stringify(err));
   }
 }
 

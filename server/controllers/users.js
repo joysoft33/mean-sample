@@ -14,7 +14,7 @@ class UsersController {
           res.json(users);
       });
     } else {
-      res.status("401").send("Not authorized, your are not admin!");
+      res.status('401').send('Not authorized, your are not admin!');
     }
   }
 
@@ -28,7 +28,7 @@ class UsersController {
           res.json(user);
       });
     } else {
-      res.status("401").send("Not authorized, your are not admin!");
+      res.status('401').send('Not authorized, your are not admin!');
     }
   }
 
@@ -58,7 +58,7 @@ class UsersController {
         }
       });
     } else {
-      res.status("401").send("Not authorized, your are not admin!");
+      res.status('401').send('Not authorized, your are not admin!');
     }
   }
 
@@ -69,7 +69,7 @@ class UsersController {
         res.sendStatus(200);
       });
     } else {
-      res.status("401").send("Not authorized, your are not admin!");
+      res.status('401').send('Not authorized, your are not admin!');
     }
   }
 
