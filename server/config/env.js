@@ -4,7 +4,7 @@ let config = {
 
   'development': {
     db: process.env.MONGODB_URI || 'mongodb://localhost:27017/mean-sample-dev',
-    cookieToken: 'mean-token-dev',
+    cookieToken: 'mean-token',
     jwtSecret: 'cJbdB3t$',
     facebookAuth: {
       clientID: process.env.FACEBOOK_ClientId || '0000',
