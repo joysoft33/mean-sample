@@ -71,7 +71,7 @@ const serverConfig = {
       raw: true
     })
   ].filter(e => e),
-  devtool: PRODUCTION ? 'source-map' : 'eval-source-map',
+  devtool: PRODUCTION ? 'source-map' : 'inline-source-map',
 };
 
 /**
@@ -162,7 +162,7 @@ const clientConfig = {
       }) => /node_modules/.test(resource)
     })
   ].filter(e => e),
-  devtool: PRODUCTION ? 'source-map' : 'eval-source-map',
+  devtool: PRODUCTION ? 'source-map' : 'inline-source-map',
 };
 
 // Notice that both configurations are exported

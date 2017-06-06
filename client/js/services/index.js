@@ -2,12 +2,18 @@
 
 import angular from 'angular';
 import cookies from 'angular-cookies';
+import resource from 'angular-resource';
 
 import usersService from './users';
 import authService from './auth';
 
-export default angular.module('appServices', ['ngCookies'])
+let services = angular.module('appServices', [
+  cookies,
+  resource
+]);
 
-  .service('UsersService', usersService)
-  .service('AuthService', authService)
-  .name;
+services
+  .factory('UsersService', usersService)
+  .service('AuthService', authService);
+
+export default services.name;

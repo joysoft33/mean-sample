@@ -9,8 +9,12 @@ export default {
   controller: function (UsersService, AuthService, $state, $mdToast) {
     'ngInject';
 
+    this.$onInit = () => {
+      this.user = new UsersService();
+    };
+
     this.signup = () =>  {
-      UsersService.create(this.user).then((res) => {
+      this.user.$save((res) => {
         return AuthService.setToken(res.token);
       }).then((user) => {
         $state.go('users');

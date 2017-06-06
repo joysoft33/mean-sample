@@ -93,9 +93,8 @@ export default () => {
         user.facebook.id = profile.id;
         user.facebook.photo = profile.photos[0].value || '';
 
-        User.update({
-          _id: user._id
-        }, user, {
+        User.findByIdAndUpdate(user._id, user, {
+          new: true,
           upsert: true,
           setDefaultsOnInsert: true
         }, (err, newUser) => {
