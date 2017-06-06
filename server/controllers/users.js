@@ -46,7 +46,7 @@ class UsersController {
   }
 
   // Update a user by request param, this param need to be id with data from body request (req.body)
-  update(req, res, next, user) {
+  update(req, res, next, currentUser) {
     if (currentUser && (req.params.id == currentUser._id || currentUser.isAdmin)) {
       User.update({
         _id: req.params.id
