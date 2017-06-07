@@ -11,3 +11,10 @@ With:
   - Passport authentication (local and Facebook)
   - JWT tokens
   - Webpack 2
+
+Can be deployed on Heroku. Add a .env file on the project root directory with:
+  ```
+    NODE_MODULES_PRODUCTION=true
+    FACEBOOK_ClientId=<your FB app clientId>
+    FACEBOOK_ClientSecret=<your FB app clientSecret>
+  ```
