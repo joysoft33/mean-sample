@@ -7,7 +7,7 @@ export default (router, passport) => {
   let auth = new AuthController(passport);
 
   router.post('/auth', (req, res, next) => {
-    return auth.local(req, res, next, passport);
+    return auth.local(req, res, next);
   });
 
   router.get('/auth/facebook', passport.authenticate('facebook', {
@@ -15,7 +15,7 @@ export default (router, passport) => {
   }));
 
   // Handle the callback after facebook has authenticated the user
-  router.get('/auth/facebook/callback', auth.facebook(passport), (req, res, next) => {
+  router.get('/auth/facebook/callback', auth.facebook(), (req, res, next) => {
     return auth.authenticate(req, res, next);
   });
 
