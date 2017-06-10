@@ -6,12 +6,12 @@ export default {
 
   template: template,
 
-  controller: function (AuthService, $state, $mdToast, $window, CONSTANTS) {
+  controller: function(AuthService, $state, $mdToast, $window, CONSTANTS) {
     'ngInject';
 
     this.signin = () => {
       // Local authentication mode
-      AuthService.login(this.user).then((user) => {
+      AuthService.login(this.user).then(() => {
         $state.go('users');
       }).catch((err) => {
         let message = err.data ? err.data.message || err.data : err;
@@ -23,6 +23,6 @@ export default {
     this.facebook = () => {
       // FB authentication request
       $window.location = CONSTANTS.serverFacebookUrl;
-    }
+    };
   }
 }

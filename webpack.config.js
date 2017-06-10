@@ -3,9 +3,25 @@ const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
 const BabiliPlugin = require('babili-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const PRODUCTION = process.env.NODE_ENV === 'production';
+
+/**
+ * Common options
+ */
+const linterConfig = {
+  enforce: 'pre',
+  test: /\.js$/,
+  exclude: /node_modules/,
+  use: [{
+    loader: 'eslint-loader',
+    options: {
+      failOnWarning: false,
+      failOnError: true
+    }
+  }]
+};
 
 /**
  * Server options
@@ -24,32 +40,38 @@ const serverConfig = {
   },
   externals: [nodeExternals()],
   module: {
-    rules: [{
-      test: /\.js$/,
-      include: path.resolve('server'),
-      use: [{
-        loader: 'babel-loader',
-        options: {
-          presets: require('./babelrc.js')(true),
-          cacheDirectory: true
-        }
-      }]
-    }],
+    rules: [
+      linterConfig,
+      {
+        test: /\.js$/,
+        include: path.resolve('server'),
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              ['es2015'],
+              ['env', {
+                targets: {
+                  node: 'current'
+                },
+                modules: false,
+                debug: false
+              }]
+            ]
+          }
+        }]
+      }
+    ]
   },
   plugins: [
-    PRODUCTION && new BabiliPlugin({
-      comments: false
-    }),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-    }),
+    PRODUCTION && new BabiliPlugin(),
     new webpack.BannerPlugin({
       banner: 'require("source-map-support").install();',
       entryOnly: false,
       raw: true
     })
   ].filter(e => e),
-  devtool: PRODUCTION ? 'source-map' : 'eval-source-map',
+  devtool: PRODUCTION ? 'source-map' : 'inline-source-map'
 };
 
 /**
@@ -62,59 +84,72 @@ const clientConfig = {
   },
   output: {
     path: path.resolve('dist/public'),
-    filename: '[name].js',
+    filename: '[name].js'
   },
   module: {
-    rules: [{
-      test: /\.js$/,
-      include: path.resolve('client'),
-      exclude: /node_modules/,
-      use: [{
-        loader: 'ng-annotate-loader'
-      }, {
-        loader: 'babel-loader',
-        options: {
-          presets: require('./babelrc.js')(false),
-          cacheDirectory: true
-        }
-      }]
-    }, {
-      test: /\.(jpe?g|gif|png|svg|woff|woff2|ttf|eot|wav|mp3|ico)$/,
-      use: [
-        'url-loader?limit=1'
-      ]
-    }, {
-      test: /\.s?css$/,
-      use: ExtractTextPlugin.extract({
-        fallback: 'style-loader',
+    rules: [
+      linterConfig,
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        include: path.resolve('client'),
         use: [{
-            loader: 'css-loader',
-            options: {
-              minimize: PRODUCTION
-            }
-          },
-          {
-            loader: 'sass-loader'
+          loader: 'ng-annotate-loader'
+        }, {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              ['es2015'],
+              ['env', {
+                targets: {
+                  browsers: ['> 5%', 'last 2 versions']
+                },
+                modules: false,
+                debug: false
+              }],
+              ['angular']
+            ]
           }
-        ]
-      })
-    }, {
-      test: /\.html$/,
-      use: [{
-        loader: 'html-loader',
-        options: {
-          minimize: PRODUCTION
-        }
-      }]
-    }]
+        }]
+      }, {
+        test: /\.(jpe?g|gif|png|svg|woff|woff2|ttf|eot|wav|mp3|ico)$/,
+        use: [{
+          loader: 'url-loader',
+          options: {
+            limit: 1
+          }
+        }]
+      }, {
+        test: /\.s?css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [{
+              loader: 'css-loader',
+              options: {
+                minimize: PRODUCTION
+              }
+            },
+            {
+              loader: 'sass-loader'
+            }
+          ]
+        })
+      }, {
+        test: /\.html$/,
+        use: [{
+          loader: 'html-loader',
+          options: {
+            minimize: PRODUCTION
+          }
+        }]
+      }
+    ]
   },
   plugins: [
     new ExtractTextPlugin('[name].css'),
-    PRODUCTION && new BabiliPlugin({
-      comments: false
-    }),
+    PRODUCTION && new BabiliPlugin(),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+      PRODUCTION: JSON.stringify(PRODUCTION)
     }),
     new HtmlWebpackPlugin({
       template: path.resolve('client/index.html'),
@@ -127,7 +162,7 @@ const clientConfig = {
       }) => /node_modules/.test(resource)
     })
   ].filter(e => e),
-  devtool: PRODUCTION ? 'source-map' : 'eval-source-map',
+  devtool: PRODUCTION ? 'source-map' : 'inline-source-map'
 };
 
 // Notice that both configurations are exported

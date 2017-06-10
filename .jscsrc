@@ -1,5 +1,5 @@
 {
-  "preset": "google",
+  "preset": "airbnb",
   "fileExtensions": [".js", "jscs"],
 
   "requireSemicolons": true,
@@ -10,6 +10,10 @@
   "disallowTrailingComma": true,
   "disallowUnusedParams": true,
 
+  "requireTrailingComma": false,
+  "requirePaddingNewLinesAfterBlocks": false,
+  "requirePaddingNewLinesBeforeLineComments": false,
+  
   "disallowSpacesInsideObjectBrackets": null,
   "disallowImplicitTypeConversion": ["string"],
 

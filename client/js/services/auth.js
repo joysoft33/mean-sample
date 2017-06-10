@@ -35,7 +35,7 @@ export default function ($http, $q, $timeout, $cookies, $rootScope, CONSTANTS) {
       var token = this.getToken();
       if (!token) {
         // No existing token, not connected
-        return reject();
+        return reject('Not authenticathed');
       }
       if (this.currentUser) {
         // Current user has already been set, return it

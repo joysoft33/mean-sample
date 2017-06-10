@@ -6,19 +6,23 @@ export default {
 
   template: template,
 
-  controller: function (UsersService, AuthService, $state, $mdToast) {
+  controller: function(UsersService, AuthService, $state, $mdToast) {
     'ngInject';
 
-    this.signup = () =>  {
-      UsersService.create(this.user).then((res) => {
+    this.$onInit = () => {
+      this.user = new UsersService();
+    };
+
+    this.signup = () => {
+      this.user.$save((res) => {
         return AuthService.setToken(res.token);
-      }).then((user) => {
+      }).then(() => {
         $state.go('users');
       }).catch((err) => {
         let message = err.data ? err.data.message || err.data : err;
         let toastContent = `Error: ${message} !`;
         $mdToast.showSimple(toastContent);
       });
-    }
+    };
   }
 }

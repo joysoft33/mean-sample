@@ -8,13 +8,14 @@ class UsersController {
   find(req, res, next, currentUser) {
     if (currentUser && currentUser.isAdmin) {
       User.find(req.query, (err, users) => {
-        if (err)
+        if (err) {
           next(err);
-        else
+        } else {
           res.json(users);
+        }
       });
     } else {
-      res.status("401").send("Not authorized, your are not admin!");
+      res.status('401').send('Not authorized, your are not admin!');
     }
   }
 
@@ -22,13 +23,14 @@ class UsersController {
   findById(req, res, next, currentUser) {
     if (currentUser && (req.params.id == currentUser._id || currentUser.isAdmin)) {
       User.findById(req.params.id, (err, user) => {
-        if (err)
+        if (err) {
           next(err);
-        else
+        } else {
           res.json(user);
+        }
       });
     } else {
-      res.status("401").send("Not authorized, your are not admin!");
+      res.status('401').send('Not authorized, your are not admin!');
     }
   }
 
@@ -46,11 +48,11 @@ class UsersController {
   }
 
   // Update a user by request param, this param need to be id with data from body request (req.body)
-  update(req, res, next, user) {
+  update(req, res, next, currentUser) {
     if (currentUser && (req.params.id == currentUser._id || currentUser.isAdmin)) {
       User.update({
         _id: req.params.id
-      }, req.body, (err, status) => {
+      }, req.body, (err) => {
         if (err) {
           next(err);
         } else {
@@ -58,7 +60,7 @@ class UsersController {
         }
       });
     } else {
-      res.status("401").send("Not authorized, your are not admin!");
+      res.status('401').send('Not authorized, your are not admin!');
     }
   }
 
@@ -66,13 +68,16 @@ class UsersController {
   delete(req, res, next, currentUser) {
     if (currentUser && currentUser.isAdmin) {
       User.findByIdAndRemove(req.params.id, (err) => {
-        res.sendStatus(200);
+        if (err) {
+          next(err);
+        } else {
+          res.sendStatus(200);
+        }
       });
     } else {
-      res.status("401").send("Not authorized, your are not admin!");
+      res.status('401').send('Not authorized, your are not admin!');
     }
   }
-
 }
 
-export default UsersController
+export default UsersController;

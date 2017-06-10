@@ -11,7 +11,7 @@ export default function (AuthService, $log, $state, $q, $transitions) {
 
     if (!to.publicRoute) {
 
-      return $q((resolve, reject) => {
+      return $q((resolve) => {
 
         AuthService.getCurrent().then(() => {
           $log.debug(to.url + ' authenticated');
@@ -21,7 +21,7 @@ export default function (AuthService, $log, $state, $q, $transitions) {
           // User isn’t authenticated
           $log.debug(to.url + ' need authentication');
           // Redirect to login page
-          resolve(transition.router.stateService.target("login.signin", {
+          resolve(transition.router.stateService.target('login.signin', {
             redirect: to.name
           }));
         });

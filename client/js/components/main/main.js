@@ -8,7 +8,7 @@ export default {
   template: template,
   css: styles,
 
-  controller: function (AuthService, $state, $transitions, $log, $mdToast, $rootScope, CONSTANTS) {
+  controller: function(AuthService, $state, $transitions, $log, $mdToast, $rootScope, CONSTANTS) {
     'ngInject';
 
     $transitions.onSuccess({}, (transition) => {
@@ -23,7 +23,7 @@ export default {
         this.user = user;
       })
       .catch((err) => {
-        $log.error(err);
+        $log.info(err);
         this.user = null;
       });
     };

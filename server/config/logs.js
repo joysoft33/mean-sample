@@ -6,8 +6,8 @@ import path from 'path';
 import fs from 'fs';
 
 export default {
-  
-  configure: (app, env) => {
+
+  configure: function (app, env) {
     if (env.runMode === 'production') {
       var logDirectory = path.join(env.rootPath, 'logs');
       // Ensure log directory exists
@@ -21,9 +21,9 @@ export default {
           path: logDirectory,
           interval: '1d'
         })
-      }));    
+      }));
     } else {
       app.use(logger('dev'));
     }
   }
-}
+};

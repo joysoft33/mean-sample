@@ -6,7 +6,7 @@ export default {
   template: '<ui-view></ui-view>',
   css: styles,
 
-  controller: function (AuthService) {
+  controller: function(AuthService) {
     'ngInject';
 
     this.$onInit = () => {

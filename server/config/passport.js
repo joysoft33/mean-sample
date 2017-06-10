@@ -7,7 +7,7 @@ import passport from 'passport';
 import User from '../models/user';
 import settings from '../utilities/settings';
 
-export default () => {
+export default function () {
 
   let env = settings();
 
@@ -18,31 +18,31 @@ export default () => {
 
   // Used to serialize the user for the request session
   // We are using id here, but we could use any "unique" information like "email"
-  passport.serializeUser(function (user, done) {
-    done(null, user.id);
-  })
+  passport.serializeUser((user, done) => {
+    done(null, user._id);
+  });
 
   // Used to deserialize user from the request session:
-  passport.deserializeUser(function (id, done) {
-    USER.findById(id, function (err, user) {
+  passport.deserializeUser((id, done) => {
+    USER.findById(id, (err, user) => {
       done(err, user);
-    })
-  })
+    });
+  });
 
   // Initialize LocalStrategy
   passport.use(new Local.Strategy({
     usernameField: 'email'
   }, (email, password, done) => {
     // Ensure that this will be executed asynchronously
-    process.nextTick(function () {
-      
+    process.nextTick(() => {
+
       User.findOne({
           email: email
         })
-        .select("+password")
-        .exec(function (err, user) {
+        .select('+password')
+        .exec((err, user) => {
           if (err) {
-            return done(err)
+            return done(err);
           }
           if (!user) {
             return done(null, false, {
@@ -50,7 +50,7 @@ export default () => {
             });
           }
           // We are checking if password is the same as the one stored and encrypted in db
-          user.validPassword(password, function (err, match) {
+          user.validPassword(password, (err, match) => {
             if (err || !match) {
               return done(null, false, {
                 message: 'Incorrect email or password.'
@@ -64,16 +64,16 @@ export default () => {
 
   // Initialize FacebookStrategy
   passport.use(new Facebook({
-    clientID: env.facebookAuth.clientID,
-    clientSecret: env.facebookAuth.clientSecret,
+    clientID: env.facebookAuth.clientID || '0',
+    clientSecret: env.facebookAuth.clientSecret || '0',
     callbackURL: env.facebookAuth.callbackURL,
     profileFields: ['id', 'name', 'photos', 'emails']
   }, (token, refreshToken, profile, done) => {
     // Ensure that this will be executed asynchronously
-    process.nextTick(function () {
+    process.nextTick(() => {
 
       User.findOne({
-        'email': profile.emails[0].value
+        email: profile.emails[0].value
       }, (err, user) => {
 
         if (err) {
@@ -93,9 +93,8 @@ export default () => {
         user.facebook.id = profile.id;
         user.facebook.photo = profile.photos[0].value || '';
 
-        User.update({
-          _id: user._id
-        }, user, {
+        User.findByIdAndUpdate(user._id, user, {
+          new: true,
           upsert: true,
           setDefaultsOnInsert: true
         }, (err, newUser) => {

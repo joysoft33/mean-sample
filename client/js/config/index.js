@@ -5,7 +5,7 @@ import routes from './routes';
 import run from './run';
 
 export default {
-  constants: constants,  
+  constants: constants,
   routes: routes,
   run: run
 }

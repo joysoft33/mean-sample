@@ -5,10 +5,14 @@ import User from '../models/user';
 
 class AuthController {
 
+  constructor(passport) {
+    this.passport = passport;
+  }
+
   // Authenticate user using our "LocalStrategy" in passport.js
-  local(req, res, next, passport) {
+  local(req, res, next) {
     // Second parameter is our own callback so that we can manage error messages the way we want
-    return passport.authenticate('local', (err, user, info) => {
+    return this.passport.authenticate('local', (err, user, info) => {
       if (err) {
         next(err);
       } else if (!user) {
@@ -22,8 +26,8 @@ class AuthController {
   }
 
   // Authenticate user using our "FacebookStrategy" in passport.js
-  facebook(passport) {
-    return passport.authenticate('facebook');
+  facebook() {
+    return this.passport.authenticate('facebook');
   }
 
   // Terminate a Facebook authentication
@@ -33,22 +37,24 @@ class AuthController {
       let user = new User(req.user);
       let token = user.generateJWT();
       // Redirect to the client view
-      res.redirect("/#!/auth/callback/" + token);
+      res.redirect('/#!/auth/callback/' + token);
     } else {
       authenticateError(null, req, res, next);
     }
   }
 
   authenticateError(err, req, res, next) {
-    if (err) { 
+    if (err) {
       // Remove uneeded attributes
       delete err.status;
       delete err.stack;
     } else {
-      err = { code: 0 }; 
+      err = {
+        code: 0
+      };
     }
     // Redirect to the client view
-    res.redirect("/#!/auth/callback?" + querystring.stringify(err));
+    res.redirect('/#!/auth/callback?' + querystring.stringify(err));
   }
 }
 

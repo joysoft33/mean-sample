@@ -33,8 +33,8 @@ let UserSchema = new mongoose.Schema({
     select: false
   },
   facebook: {
-    id: String, 
-    token: String, 
+    id: String,
+    token: String,
     photo: String
   }
 }, {
@@ -53,26 +53,17 @@ UserSchema.pre('save', function (next) {
   }
 
   // Only hash the password if it has been modified (or is new)
-  if (!this.isModified('password')) {
-    next();
-  } else {
-    // Generate a salt
-    bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
-      if (err) {
-        next(err);
-      } else {
-        // Hash the password using our new salt
-        bcrypt.hash(this.password, salt, (err, hash) => {
-          if (err) {
-            next(err);
-          } else {
-            // Override the cleartext password with the hashed one
-            this.password = hash;
-            next();
-          }
-        });
-      }
+  if (this.isModified('password')) {
+    bcrypt.hash(this.password, SALT_WORK_FACTOR).then((hash) => {
+      // Override the cleartext password with the hashed one
+      this.password = hash;
+      next();
+    })
+    .catch((err) => {
+      next(err);
     });
+  } else {
+    next();
   }
 });
 
@@ -89,37 +80,27 @@ UserSchema.pre('update', function (next) {
     values.lastName = values.lastName.toUpperCase();
   }
 
-  if (!values.password) {
-    next();
-  } else {
-    // Generate a salt
-    bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
-      if (err) {
-        next(err);
-      } else {
-        // Hash the password using our new salt
-        bcrypt.hash(values.password, salt, (err, hash) => {
-          if (err) {
-            next(err);
-          } else {
-            // Override the cleartext password with the hashed one
-            values.password = hash;
-            next();
-          }
-        });
-      }
+  if (values.password) {
+    bcrypt.hash(values.password, SALT_WORK_FACTOR).then((hash) => {
+      // Override the cleartext password with the hashed one
+      values.password = hash;
+      next();
+    })
+    .catch((err) => {
+      next(err);
     });
+  } else {
+    next();
   }
 });
 
-// Compare the given password with the db encrypted one 
+// Compare the given password with the db encrypted one
 UserSchema.methods.validPassword = function (candidatePassword, next) {
-  bcrypt.compare(candidatePassword, this.password, function (err, match) {
-    if (err) {
-      next(err);
-    } else {
-      next(null, match);
-    }
+  bcrypt.compare(candidatePassword, this.password).then((match) => {
+    next(null, match);
+  })
+  .catch((err) => {
+    next(err);
   });
 };
 
@@ -129,16 +110,15 @@ UserSchema.methods.generateJWT = function () {
   let env = settings();
 
   return jwt.sign({
-    _id: this._id,
-    email: this.email,
-    firstName: this.firstName,
-    lastName: this.lastName,
-    isAdmin: this.isAdmin
-  }, 
-  env.jwtSecret,
-  {
-    expiresIn: '7d'
-  });
+      _id: this._id,
+      email: this.email,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      isAdmin: this.isAdmin
+    },
+    env.jwtSecret, {
+      expiresIn: '7d'
+    });
 };
 
 // Return the full user name

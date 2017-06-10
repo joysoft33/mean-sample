@@ -9,12 +9,14 @@ import loginComponent from './login/login';
 import signinComponent from './login/signin';
 import signupComponent from './login/signup';
 
-export default angular.module('appComponents', [])
+let components = angular.module('appComponents', []);
 
+components
   .component('main', mainComponent)
   .component('home', homeComponent)
   .component('users', usersComponent)
   .component('login', loginComponent)
   .component('signin', signinComponent)
-  .component('signup', signupComponent)
-  .name;
+  .component('signup', signupComponent);
+
+export default components.name;
