@@ -32,7 +32,8 @@ export default function () {
   // Initialize LocalStrategy
   passport.use(new Local.Strategy({
 
-    usernameField: 'email'
+    usernameField: 'email',
+    passwordField: 'password'
 
   }, (email, password, done) => {
     // Ensure that this will be executed asynchronously
