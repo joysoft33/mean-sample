@@ -18,8 +18,14 @@ export default function (app, passport) {
     secret: env.jwtSecret,
     getToken: function (req) {
       // Get Token is a function to tell JWT where our token is stored in users' requests
-      // In our app, this token is stored in a cookie
-      return req.cookies[env.cookieToken];
+      // In our app, this token is stored in the authorization header
+      var bearerHeader = req.headers["authorization"];
+      var token;
+      if (typeof bearerHeader !== 'undefined') {
+        var bearer = bearerHeader.split(" ");
+        token = bearer[1];
+      }
+      return token;
     }
   });
 

@@ -1,6 +1,6 @@
 'use strict';
 
-export default function (AuthService, $log, $state, $q, $transitions) {
+export default function (AuthService, $log, $q, $transitions) {
   'ngInject';
 
   // ui-router transitions

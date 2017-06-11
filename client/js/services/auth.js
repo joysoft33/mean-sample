@@ -1,6 +1,6 @@
 'use strict';
 
-export default function ($http, $q, $timeout, $cookies, $rootScope, CONSTANTS) {
+export default function ($http, $q, $timeout, localStorageService, $rootScope, CONSTANTS) {
   'ngInject';
 
   this.currentUser = null;
@@ -41,7 +41,7 @@ export default function ($http, $q, $timeout, $cookies, $rootScope, CONSTANTS) {
       return resolve(this.currentUser);
     }
     // Get user from saved token
-    this._decodePayload(token.split('.')[1]).then((payload) => {
+    this._decodePayload(token).then((payload) => {
       this.currentUser = payload;
       resolve(payload);
     })
@@ -66,11 +66,9 @@ export default function ($http, $q, $timeout, $cookies, $rootScope, CONSTANTS) {
 
   this.saveToken = (token) => $q((resolve, reject) => {
     // Decode token payload before saving it into the cookie
-    this._decodePayload(token.split('.')[1]).then((payload) => {
-      // Add jwt token to auth header for all requests made by the $http service
-      $http.defaults.headers.common.Authorization = 'Bearer ' + token;
+    this._decodePayload(token).then((payload) => {
       $rootScope.$broadcast(CONSTANTS.authEvent, payload);
-      $cookies.put(CONSTANTS.authCookie, token);
+      localStorageService.set(CONSTANTS.authToken, token);
       resolve(payload);
     })
     .catch((err) => {
@@ -86,18 +84,21 @@ export default function ($http, $q, $timeout, $cookies, $rootScope, CONSTANTS) {
       $rootScope.$broadcast(CONSTANTS.authEvent, null);
       this.currentUser = null;
     }
-    $cookies.remove(CONSTANTS.authCookie);
+    localStorageService.remove(CONSTANTS.authToken);
   };
 
   this.getToken = () =>
-    $cookies.get(CONSTANTS.authCookie);
+    localStorageService.get(CONSTANTS.authToken);
 
   // Private methods
-  this._decodePayload = (data) => $q((resolve, reject) => {
+  this._decodePayload = (token) => $q((resolve, reject) => {
     // Decode the encrypted payload
+    var data = token.split('.')[1];
     var payload = JSON.parse(decodeURI(this._base64ToUTF8(this._urlBase64Decode(data))));
     // Control the expiration date
     if (Math.round(new Date().getTime() / 1000) <= payload.exp) {
+      // Add jwt token to auth header for all requests made by the $http service
+      $http.defaults.headers.common.Authorization = 'Bearer ' + token;
       resolve(payload);
     } else {
       reject('Expired');

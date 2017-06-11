@@ -4,14 +4,12 @@ export default function ($stateProvider, $urlRouterProvider) {
   'ngInject';
 
   $stateProvider
-    .state({
-      name: 'home',
+    .state('home', {
       url: '/home',
       publicRoute: true,
       component: 'home'
     })
-    .state({
-      name: 'users',
+    .state('users', {
       url: '/users',
       component: 'users'
     })

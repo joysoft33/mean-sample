@@ -24,6 +24,7 @@ let app = angular.module('meanApp', [
 ]);
 
 app.constant('CONSTANTS', config.constants);
+app.config(config.storage);
 app.config(config.routes);
 app.run(config.run);
 

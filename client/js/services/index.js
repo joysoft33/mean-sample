@@ -1,14 +1,14 @@
 'use strict';
 
 import angular from 'angular';
-import cookies from 'angular-cookies';
 import resource from 'angular-resource';
+import localStorage from 'angular-local-storage';
 
 import usersService from './users';
 import authService from './auth';
 
 let services = angular.module('appServices', [
-  cookies,
+  localStorage,
   resource
 ]);
 
