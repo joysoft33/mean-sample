@@ -38,7 +38,7 @@ export default function ($stateProvider, $urlRouterProvider) {
         status: null,
         message: null
       },
-      controller: function(AuthService, $stateParams, $state, $mdToast) {
+      controller: function (AuthService, $stateParams, $state, $mdToast) {
         'ngInject';
 
         if ($stateParams.token) {

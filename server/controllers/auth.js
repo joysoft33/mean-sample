@@ -5,18 +5,12 @@ import User from '../models/user';
 
 class AuthController {
 
-  constructor(passport) {
-    this.passport = passport;
-  }
-
   // Authenticate user using our "LocalStrategy" in passport.js
-  local(req, res, next) {
-    // Second parameter is our own callback so that we can manage error messages the way we want
-    return this.passport.authenticate('local', (err, user, info) => {
-      if (err) {
-        next(err);
-      } else if (!user) {
-        res.status(401).json(info);
+  local(passport, req, res, next) {
+    // Give passport a custom callback in order to be able to manage the request return code/token
+    return passport.authenticate('local', (err, user, info) => {
+      if (err || !user) {
+        res.status(401).json(err || info || 'Incorrect user email or password');
       } else {
         res.json({
           token: user.generateJWT()
@@ -26,10 +20,6 @@ class AuthController {
   }
 
   // Authenticate user using our "FacebookStrategy" in passport.js
-  facebook() {
-    return this.passport.authenticate('facebook');
-  }
-
   // Terminate a Facebook authentication
   authenticate(req, res, next) {
     if (req.user) {

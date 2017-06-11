@@ -41,7 +41,9 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 // Set default static files path
-app.use(express.static(env.publicPath));
+app.use(express.static(env.publicPath, {
+  etag: false
+}));
 
 // Initialize passport used by express for authentication
 app.use(passport.initialize());

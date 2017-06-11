@@ -6,4 +6,4 @@ export default {
   usersUrl: '/api/users',
   authCookie: 'mean-token',
   serverFacebookUrl: '/api/auth/facebook'
-}
+};

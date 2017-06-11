@@ -8,4 +8,4 @@ export default {
   constants: constants,
   routes: routes,
   run: run
-}
+};

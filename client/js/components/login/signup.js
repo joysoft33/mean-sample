@@ -6,7 +6,7 @@ export default {
 
   template: template,
 
-  controller: function(UsersService, AuthService, $state, $mdToast) {
+  controller: function (UsersService, AuthService, $state, $mdToast) {
     'ngInject';
 
     this.$onInit = () => {

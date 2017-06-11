@@ -8,7 +8,7 @@ export default {
   template: template,
   css: styles,
 
-  controller: function(AuthService, $state, $transitions, $log, $mdToast, $rootScope, CONSTANTS) {
+  controller: function (AuthService, $state, $transitions, $log, $mdToast, $rootScope, CONSTANTS) {
     'ngInject';
 
     $transitions.onSuccess({}, (transition) => {
@@ -36,7 +36,7 @@ export default {
     };
 
     // Listen at authentication messages (see auth service)
-    $rootScope.$on(CONSTANTS.authEvent, (evt, user) => {
+    $rootScope.$on(CONSTANTS.authEvent, (evt, user) =>  {
       // Save the currently connected user and display the according message
       this.user = user;
       if (user) {

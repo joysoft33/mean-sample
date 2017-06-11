@@ -31,7 +31,9 @@ export default function () {
 
   // Initialize LocalStrategy
   passport.use(new Local.Strategy({
+
     usernameField: 'email'
+
   }, (email, password, done) => {
     // Ensure that this will be executed asynchronously
     process.nextTick(() => {
@@ -52,9 +54,7 @@ export default function () {
           // We are checking if password is the same as the one stored and encrypted in db
           user.validPassword(password, (err, match) => {
             if (err || !match) {
-              return done(null, false, {
-                message: 'Incorrect email or password.'
-              });
+              return done(err || 'Incorrect user email or password', false);
             }
             return done(null, user);
           });
@@ -64,10 +64,12 @@ export default function () {
 
   // Initialize FacebookStrategy
   passport.use(new Facebook({
+
     clientID: env.facebookAuth.clientID || '0',
     clientSecret: env.facebookAuth.clientSecret || '0',
     callbackURL: env.facebookAuth.callbackURL,
     profileFields: ['id', 'name', 'photos', 'emails']
+
   }, (token, refreshToken, profile, done) => {
     // Ensure that this will be executed asynchronously
     process.nextTick(() => {
