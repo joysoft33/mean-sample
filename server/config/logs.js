@@ -7,6 +7,9 @@ import fs from 'fs';
 
 export default {
 
+  /**
+   * Configure the logs system
+   */
   configure: function (app, env) {
     if (env.runMode === 'production') {
       var logDirectory = path.join(env.rootPath, 'logs');

@@ -49,7 +49,7 @@ app.use(express.static(env.publicPath, {
 app.use(passport.initialize());
 
 // Set web service routes
-app.use('/api', router(app, passport));
+app.use('/api', router(passport));
 
 // Unknown route handler
 app.use((req, res) => {

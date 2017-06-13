@@ -9,6 +9,9 @@ import bcrypt from 'bcryptjs';
 // For password encryption
 const SALT_WORK_FACTOR = 10;
 
+/**
+ * Build the user schema
+ */
 let UserSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -41,7 +44,9 @@ let UserSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Sanitize the user fields before storing in db
+/**
+ * Sanitize the user fields before creating object in db
+ */
 UserSchema.pre('save', function (next) {
 
   if (this.isModified('firstName')) {
@@ -67,7 +72,9 @@ UserSchema.pre('save', function (next) {
   }
 });
 
-// Sanitize the modified user fields before storing in db
+/**
+ * Sanitize the modified user fields before storing in db
+ */
 UserSchema.pre('update', function (next) {
 
   var values = this._update.$set;
@@ -94,7 +101,9 @@ UserSchema.pre('update', function (next) {
   }
 });
 
-// Compare the given password with the db encrypted one
+/**
+ * Compare the given password with the db encrypted one
+ */
 UserSchema.methods.validPassword = function (candidatePassword, next) {
   bcrypt.compare(candidatePassword, this.password).then((match) => {
     next(null, match);
@@ -104,7 +113,9 @@ UserSchema.methods.validPassword = function (candidatePassword, next) {
   });
 };
 
-// Build an encrypted token from the current used
+/**
+ * Build an encrypted token from the current user
+ */
 UserSchema.methods.generateJWT = function () {
 
   let env = settings();
@@ -117,13 +128,18 @@ UserSchema.methods.generateJWT = function () {
       isAdmin: this.isAdmin
     },
     env.jwtSecret, {
-      expiresIn: '7d'
+      expiresIn: '1h'
     });
 };
 
-// Return the full user name
+/**
+ * Return the full user name
+ */
 UserSchema.methods.fullName = function () {
   return this.firstName + ' ' + this.lastName;
 };
 
+/**
+ * Create and export the user model from the built user schema
+ */
 export default mongoose.model('User', UserSchema);

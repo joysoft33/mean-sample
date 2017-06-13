@@ -1,32 +1,27 @@
 'use strict';
 
-import jwt from 'express-jwt';
 import express from 'express';
+import jwt from 'express-jwt';
 
 import settings from '../utilities/settings';
 import setUsersRoutes from './users';
 import setAuthRoutes from './auth';
 
-export default function (app, passport) {
+/**
+ * Configure server API routes.
+ * @param {*} passport The passport object
+ */
+export default function (passport) {
 
   const router = express.Router();
   const env = settings();
 
-  // Initialize express JWT
-  // It should receive the secretToken (the same one used to generate JWT token in User model)
+  // Use authCheck as middleware, it will check JWT token
+  // and if JWT is ok, then it will set req.user (by default) in which we will find our payload information
+  // If JWT isn't ok, it will send back an unauthorized error and prevent user from accessing this url
+  // So, it checks if user is at least logged in (otherwise JWT token shouldn't be set / be right)
   let authCheck = jwt({
     secret: env.jwtSecret,
-    getToken: function (req) {
-      // Get Token is a function to tell JWT where our token is stored in users' requests
-      // In our app, this token is stored in the authorization header
-      var bearerHeader = req.headers["authorization"];
-      var token;
-      if (typeof bearerHeader !== 'undefined') {
-        var bearer = bearerHeader.split(" ");
-        token = bearer[1];
-      }
-      return token;
-    }
   });
 
   setUsersRoutes(router, authCheck);

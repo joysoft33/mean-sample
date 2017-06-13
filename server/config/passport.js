@@ -7,29 +7,16 @@ import passport from 'passport';
 import User from '../models/user';
 import settings from '../utilities/settings';
 
+/**
+ * The Passport authentication module initialization
+ */
 export default function () {
 
   let env = settings();
 
-  // Take a look at: http://stackoverflow.com/questions/27637609/understanding-passport-serialize-deserialize
-  // and https://howtonode.org/understanding-process-next-tick
-  // and https://www.sitepoint.com/local-authentication-using-passport-node-js/
-  // and https://www.sitepoint.com/passport-authentication-for-nodejs-applications/
-
-  // Used to serialize the user for the request session
-  // We are using id here, but we could use any "unique" information like "email"
-  passport.serializeUser((user, done) => {
-    done(null, user._id);
-  });
-
-  // Used to deserialize user from the request session:
-  passport.deserializeUser((id, done) => {
-    USER.findById(id, (err, user) => {
-      done(err, user);
-    });
-  });
-
-  // Initialize LocalStrategy
+  /**
+   * Initialize Passport LocalStrategy
+   */
   passport.use(new Local.Strategy({
 
     usernameField: 'email',
@@ -63,7 +50,9 @@ export default function () {
     });
   }));
 
-  // Initialize FacebookStrategy
+  /**
+   * Initialize the Passport FacebookStrategy
+   */
   passport.use(new Facebook({
 
     clientID: env.facebookAuth.clientID || '0',
@@ -80,22 +69,28 @@ export default function () {
       }, (err, user) => {
 
         if (err) {
+          // db error ?
           return done(err);
         }
 
         if (!user) {
+          // No user found matching the given email address
+          // Create a new user
           user = new User();
           user.email = profile.emails[0].value || '';
           user.firstName = profile.name.givenName;
           user.lastName = profile.name.familyName;
         } else if (user.facebook.id) {
+          // User found and Facebook credentials already saved
           return done(null, user);
         }
 
+        // Save Facebook credentials and avatar url
         user.facebook.token = token;
         user.facebook.id = profile.id;
         user.facebook.photo = profile.photos[0].value || '';
 
+        // Create or update the user
         User.findByIdAndUpdate(user._id, user, {
           new: true,
           upsert: true,
