@@ -1,7 +1,7 @@
 'use strict';
 
 import angular from 'angular';
-import uiRouter from 'angular-ui-router';
+import uiRouter from '@uirouter/angularjs';
 import messages from 'angular-messages';
 import material from 'angular-material';
 import css from 'angular-css';
