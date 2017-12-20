@@ -63,19 +63,19 @@ app.use((err, req, res, next) => {
 });
 
 // Connect to database
-mongoose.connect(env.db, (err) => {
-
-  if (err) {
-    throw err;
-  }
-
-  debug('Successfully connected to MongoDB');
-
+mongoose.Promise = require('bluebird');
+mongoose.connect(env.db, {
+  useMongoClient: true,
+  promiseLibrary: require('bluebird')
+}).then(() => {
+  console.log('Successfully connected to MongoDB');
   // Get port from environment and store in Express.
   const port = parseInt(process.env.PORT, 10) || 8080;
 
   // Finally, create the HTTP server
   app.listen(port, () => {
-    debug('Listening on port ' + port);
+    console.log('Listening on port ' + port);
   });
+}).catch((err) => {
+  if (err) throw err;
 });
